@@ -39,7 +39,7 @@ public class AccountDetails   {
   private Integer accountNumber = null;
 
   @JsonProperty("mobileNumber")
-  private Integer mobileNumber = null;
+  private Long mobileNumber = null;
 
   public String getId() {
     return id;
@@ -165,7 +165,7 @@ public class AccountDetails   {
     this.accountNumber = accountNumber;
   }
 
-  public AccountDetails mobileNumber(Integer mobileNumber) {
+  public AccountDetails mobileNumber(Long mobileNumber) {
     this.mobileNumber = mobileNumber;
     return this;
   }
@@ -174,11 +174,11 @@ public class AccountDetails   {
    * @return mobileNumber
    **/
   @ApiModelProperty(value = "")
-  public Integer getMobileNumber() {
+  public Long getMobileNumber() {
     return mobileNumber;
   }
 
-  public void setMobileNumber(Integer mobileNumber) {
+  public void setMobileNumber(Long mobileNumber) {
     this.mobileNumber = mobileNumber;
   }
 

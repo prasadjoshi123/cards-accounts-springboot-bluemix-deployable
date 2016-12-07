@@ -48,6 +48,16 @@
             <artifactId>bluemix-cloud-connectors-cloudfoundry</artifactId>
             <version>0.0.1.RC6</version>
         </dependency>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.12</version>
+	</dependency>
+	<dependency>
+		<groupId>org.mockito</groupId>
+		<artifactId>mockito-all</artifactId>
+		<version>1.9.5</version>
+	</dependency>
         <dependency>
             <groupId>net.bluemix</groupId>
             <artifactId>bluemix-cloud-connectors-local</artifactId>
