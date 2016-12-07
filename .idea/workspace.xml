@@ -87,11 +87,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UpdateControllerApiTest.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="UpdateControllerApiTest.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/io/swagger/test/UpdateControllerApiTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6086956">
-              <caret line="45" column="48" selection-start-line="45" selection-start-column="48" selection-end-line="45" selection-end-column="48" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="70" column="108" selection-start-line="70" selection-start-column="108" selection-end-line="70" selection-end-column="108" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -99,11 +99,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ManageAccountControllerTest.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ManageAccountControllerTest.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/io/swagger/test/ManageAccountControllerTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="40" column="48" selection-start-line="40" selection-start-column="48" selection-end-line="40" selection-end-column="48" />
+            <state vertical-scroll-proportion="0.47826087">
+              <caret line="57" column="62" selection-start-line="54" selection-start-column="53" selection-end-line="57" selection-end-column="62" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -177,8 +177,8 @@
         <option value="$PROJECT_DIR$/src/main/java/io/swagger/api/AccountsApiController.java" />
         <option value="$PROJECT_DIR$/src/main/java/io/swagger/model/AccountDetails.java" />
         <option value="$PROJECT_DIR$/src/main/java/io/swagger/test/AccountsApiControllerTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/io/swagger/test/ManageAccountControllerTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/io/swagger/test/UpdateControllerApiTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/io/swagger/test/ManageAccountControllerTest.java" />
       </list>
     </option>
   </component>
@@ -1286,20 +1286,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/io/swagger/test/ManageAccountControllerTest.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/io/swagger/test/UpdateControllerApiTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="40" column="48" selection-start-line="40" selection-start-column="48" selection-end-line="40" selection-end-column="48" />
+          <caret line="70" column="108" selection-start-line="70" selection-start-column="108" selection-end-line="70" selection-end-column="108" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/io/swagger/test/UpdateControllerApiTest.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/io/swagger/test/ManageAccountControllerTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6086956">
-          <caret line="45" column="48" selection-start-line="45" selection-start-column="48" selection-end-line="45" selection-end-column="48" />
+        <state vertical-scroll-proportion="0.47826087">
+          <caret line="57" column="62" selection-start-line="54" selection-start-column="53" selection-end-line="57" selection-end-column="62" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

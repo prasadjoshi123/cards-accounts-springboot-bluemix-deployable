@@ -59,7 +59,6 @@ public class UpdateControllerApiTest {
 		toBeUpdatedAccountDetails.setUserName("Sriram");
 		toBeUpdatedAccountDetails.setMobileNumber(9890931623l);
 		toBeUpdatedAccountDetails.setAddress("Pune");
-		Mockito.doNothing().when(repository).update(toBeUpdatedAccountDetails);
 
 		/**
 		 * Setting up the mock invocations with responses stubbed/mocked
@@ -67,6 +66,7 @@ public class UpdateControllerApiTest {
 		 * with a value of validAccountId=1000; the response will be mocked
 		 * with the validAccountDetails object
 		 */
+		Mockito.doNothing().when(repository).update(toBeUpdatedAccountDetails);
 		when(repository.get(validAccountId)).thenReturn(validAccountDetails);
 		when(repository.get(inValidAccountId)).thenThrow(new DocumentNotFoundException("No Account found"));
 
