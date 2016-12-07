@@ -1,0 +1,309 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"version": "1.0.0",
+		"title": "Rest API to create/fetch accounts in Finkit system",
+		"description": "A simple API to learn how to write OpenAPI Specification"
+	},
+	"schemes": [
+		"https"
+	],
+	"host": "localhost:7070",
+	"basePath": "/card-accounts",
+	"name":"Account Details Service Routes",
+	"paths": {
+		"/accounts": {
+			"get": {
+				"summary": "Gets account details",
+				"description": "Returns a list containing all account details",
+				"operationId":"getAllAccounts",
+				"responses": {
+					"200": {
+						"description": "A list of Accounts",
+						"schema": {
+							"$ref": "#/definitions/Accounts"
+						}
+					}
+				}
+			},
+			"post": {
+				"summary": "Creates an account",
+				"description": "Adds a new account to the Finkit system.",
+				"operationId":"createAccount",
+				"parameters": [
+					{
+						"name": "accountDetails",
+						"in": "body",
+						"description": "The account to be created.",
+						"schema": {
+							"$ref": "#/definitions/AccountDetails"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Account succesfully created."
+					},
+					"400": {
+						"description": "Error creating the account"
+					}
+				}
+			}
+		},
+		"/accounts/{accountNumber}": {
+			"get": {
+				"summary": "Gets the account details for the given account number",
+				"description": "Returns teh account details for the given account number",
+				"operationId":"getAccountDetails",
+				"parameters": [
+					{
+						"name": "accountNumber",
+						"in": "path",
+						"required": true,
+						"description": "The person's accountNumber",
+						"type": "integer"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The required account details",
+						"schema": {
+							"$ref": "#/definitions/AccountDetails"
+						}
+					},
+					"404": {
+						"description": "Account does not exist."
+					}
+				}
+			}
+		},
+		"/update-account/{accountNumber}": {
+			"put": {
+				"summary": "Account details update",
+				"description": "Updates the account details for the given accountNumber",
+				"operationId":"updateAccountDetails",
+				"parameters": [
+									{
+										"name": "accountDetails",
+										"in": "body",
+										"description": "The account to be updated.",
+										"schema": {
+											"$ref": "#/definitions/AccountDetails"
+										}
+									}
+				],
+				"responses": {
+					"200": {
+						"description": "Account Details succesfully updated"
+
+					},
+					"404": {
+						"description": "Account does not exist."
+					}
+				}
+			}
+		}
+		,
+				"/manage-account/{accountNumber}": {
+					"delete": {
+						"summary": "Account details delete",
+						"description": "Deletes the account details for the given accountNumber",
+						"operationId":"deleetAccount",
+
+						"responses": {
+							"200": {
+								"description": "Account succesfully deleted"
+
+							},
+							"404": {
+								"description": "Account does not exist."
+							}
+						}
+					}
+		},
+		"/card": {
+					"get": {
+						"summary": "Gets card details",
+						"description": "Returns a list containing all card details",
+						"operationId":"getAllCards",
+						"responses": {
+							"200": {
+								"description": "A list of Cards",
+								"schema": {
+									"$ref": "#/definitions/Cards"
+								}
+							}
+						}
+					},
+					"post": {
+						"summary": "Creates a card",
+						"description": "Adds a new card to the Finkit system.",
+						"operationId":"createCard",
+						"parameters": [
+							{
+								"name": "cardDetails",
+								"in": "body",
+								"description": "The card to be created.",
+								"schema": {
+									"$ref": "#/definitions/CardDetails"
+								}
+							}
+						],
+						"responses": {
+							"200": {
+								"description": "Card succesfully created."
+							},
+							"400": {
+								"description": "Error creating the card"
+							}
+						}
+					}
+		},"/update-card/{cardNumber}": {
+			"put": {
+				"summary": "Card details update",
+				"description": "Updates the card details for the given cardNumber",
+				"operationId":"updateCardDetails",
+				"parameters": [
+					{
+						"name": "cardDetails",
+						"in": "body",
+						"description": "The card to be created.",
+						"schema": {
+							"$ref": "#/definitions/CardDetails"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Card Details succesfully updated"
+
+					},
+					"404": {
+						"description": "Card does not exist."
+					}
+				}
+			}
+		},
+		"/manage-card/{cardNumber}": {
+			"delete": {
+				"summary": "Card details delete",
+				"description": "Deletes the card details for the given cardNumber",
+				"operationId":"deleteCardDetails",
+
+				"responses": {
+					"200": {
+						"description": "Card Details succesfully deleted"
+
+					},
+					"404": {
+						"description": "Card does not exist."
+					}
+				}
+			}
+		},
+		"/fetch-cards/{customerId}": {
+					"get": {
+						"summary": "Fetch Card details for the customer",
+						"description": "Fetches the card details for the given customer id",
+						"operationId":"fetchCardsForCustomer",
+
+						"responses": {
+							"200": {
+								"description": "Card Details succesfully updated",
+								"schema": {
+															"$ref": "#/definitions/Cards"
+						}
+
+							},
+							"404": {
+								"description": "Card does not exist."
+							}
+						}
+					}
+		},
+		"/fetch-card-details/{cardNumber}": {
+					"get": {
+						"summary": "Fetch Card details for given card number",
+						"description": "Fetches the card details for the given card number",
+						"operationId":"fetchCardsDetails",
+
+						"responses": {
+							"200": {
+								"description": "Card Details of the given card number",
+								"schema": {
+															"$ref": "#/definitions/CardDetails"
+						}
+
+							},
+							"404": {
+								"description": "Card does not exist."
+							}
+						}
+					}
+		}
+	},
+	"definitions": {
+		"AccountDetails": {
+			"required": [
+				"customerId"
+			],"properties": {
+					"userName": {
+						"type": "string"
+					},
+					"customerId": {
+						"type": "integer"
+					},
+					"accountType": {
+						"type": "string"
+					},
+					"accountStatus": {
+						"type": "string"
+					},
+					"accountBalance": {
+						"type": "float"
+					},
+					"address": {
+						"type": "string"
+					},
+					"mobileNumber": {
+						"type": "integer"
+		}
+		}},"CardDetails": {
+			"properties": {
+				"cardNumber": {
+					"type": "integer"
+				},
+				"customerId": {
+					"type": "integer"
+				},
+				"cardType": {
+					"type": "string"
+				},
+				"cardStatus": {
+					"type": "string"
+				},
+				"startDate": {
+					"type": "string"
+				},
+				"expiryDate": {
+					"type": "string"
+				},
+				"cardApplyMode": {
+					"type": "string"
+				}
+			}
+		},
+		"Accounts": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/AccountDetails"
+			}
+		},
+		"Cards": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CardDetails"
+					}
+		}
+	}
+}
