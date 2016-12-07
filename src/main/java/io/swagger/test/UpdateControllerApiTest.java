@@ -26,7 +26,8 @@ import static org.mockito.Mockito.when;
 /**
  * Created by Sriram Sundararajan on 12/7/2016.
  */
-@RunWith(MockitoJUnitRunner.class) public class UpdateControllerApiTest {
+@RunWith(MockitoJUnitRunner.class)
+public class UpdateControllerApiTest {
 	private final AccountDetails validAccountDetails = new AccountDetails();
 	private final AccountDetails toBeUpdatedAccountDetails = new AccountDetails();
 
@@ -35,12 +36,15 @@ import static org.mockito.Mockito.when;
 	// This accountId will be treated as a inValid AccountId for this unit test program
 	private final String inValidAccountId = "9999";
 
-	@InjectMocks UpdateAccountApiController updateAccountApiController = new UpdateAccountApiController();
+	@InjectMocks
+	UpdateAccountApiController updateAccountApiController = new UpdateAccountApiController();
 
 	// The class whose invocations need to be stubbed
-	@Mock private AccountRepository repository;
+	@Mock
+	private AccountRepository repository;
 
-	@Before public void setUp() {
+	@Before
+	public void setUp() {
 		// Setting up the details for a valid account detail
 		validAccountDetails.setAccountNumber(1000);
 		validAccountDetails.setAccountType("Savings");
@@ -67,7 +71,8 @@ import static org.mockito.Mockito.when;
 
 	}
 
-	@Test public void testUpdateAccountsWithValidAccountId() {
+	@Test
+	public void testUpdateAccountsWithValidAccountId() {
 		ResponseEntity response = updateAccountApiController
 				.updateAccountDetails(toBeUpdatedAccountDetails, validAccountId);
 
@@ -87,7 +92,8 @@ import static org.mockito.Mockito.when;
 		Assert.assertEquals(toBeUpdatedAccountDetails.getAccountType(), actualAccountType);
 	}
 
-	@Test public void testUpdateAccountsWithInValidAccountId() {
+	@Test
+	public void testUpdateAccountsWithInValidAccountId() {
 		ResponseEntity response = updateAccountApiController
 				.updateAccountDetails(toBeUpdatedAccountDetails, inValidAccountId);
 
