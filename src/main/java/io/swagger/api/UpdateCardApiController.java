@@ -1,19 +1,28 @@
 package io.swagger.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.model.CardDetails;
 
 import io.swagger.annotations.*;
 
 import io.swagger.model.CardRepository;
 import org.ektorp.DocumentNotFoundException;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -26,17 +35,27 @@ public class UpdateCardApiController implements UpdateCardApi {
     @Autowired
     private CardRepository repository;
 
-    @RequestMapping(method = RequestMethod.PUT, value = "{id}", consumes = "application/json")
-    public ResponseEntity<?> updateCardDetails(@RequestBody CardDetails cardD, @PathVariable String id) {
+    @RequestMapping(method = RequestMethod.PUT, value = "{cardNumber}", consumes = "application/json")
+    public ResponseEntity<?> updateCardDetails(@RequestBody CardDetails cardD, @PathVariable String cardNumber) {
         CardDetails cardDetails = null;
+        String stringToParse = null;
         try {
-            cardDetails = repository.get(id);
+            String URL = "http://localhost:8080/card_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
+            RestTemplate restTemplate = new RestTemplate();
+            stringToParse = restTemplate.getForObject(URL, String.class);
+            String id=getDocId(stringToParse);
+            cardDetails=repository.get(id);
         } catch (DocumentNotFoundException ex) {
             return new ResponseEntity<ApplicationError>(
                     new ApplicationError(HttpStatus.NOT_FOUND.value(), "document to be updated not found"),
                     HttpStatus.NOT_FOUND);
+        } catch (IOException ex) {
+            return new ResponseEntity<ApplicationError>(
+                    new ApplicationError(HttpStatus.NOT_FOUND.value(), "document to be updated not found"),
+                    HttpStatus.NOT_FOUND);
         }
-        System.out.println("uuuuuuuuuuuuuuuu"+cardD.getCardNumber());
+
+        System.out.println("uuuuuuuuuuuuuuuu" + cardD.getCardNumber());
         cardDetails.setCardNumber(cardD.getCardNumber());
         cardDetails.setCardApplyMode(cardD.getCardApplyMode());
         cardDetails.setCardStatus(cardD.getCardStatus());
@@ -47,4 +66,20 @@ public class UpdateCardApiController implements UpdateCardApi {
         repository.update(cardDetails);
         return new ResponseEntity<CardDetails>(cardDetails, HttpStatus.OK);
     }
+
+    private String getDocId(String str) throws IOException {
+        String id = null;
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(str);
+        JsonNode rowNode = root.path("rows");
+        if (rowNode.isArray()) {
+            // If this node an Arrray?
+        }
+        for (JsonNode node : rowNode) {
+            id = node.path("id").asText();
+
+        }
+        return id;
+    }
+
 }
