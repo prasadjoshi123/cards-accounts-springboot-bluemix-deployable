@@ -1,5 +1,7 @@
 package io.swagger.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.model.AccountDetails;
 
 import io.swagger.annotations.*;
@@ -11,8 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -26,13 +30,22 @@ public class UpdateAccountApiController implements UpdateAccountApi {
     @Autowired
     private AccountRepository repository;
 
-    @RequestMapping(method = RequestMethod.PUT, value = "{id}", consumes = "application/json")
+    @RequestMapping(method = RequestMethod.PUT, value = "{accountNumber}", consumes = "application/json")
     //public ResponseEntity<?> updateAccountDetails(@ApiParam(value = "The account to be updated."  ) @RequestBody AccountDetails accountDetails) {
-    public ResponseEntity<?> updateAccountDetails(@RequestBody AccountDetails accountDetails, @PathVariable String id) {
+    public ResponseEntity<?> updateAccountDetails(@RequestBody AccountDetails accountDetails, @PathVariable String accountNumber) {
             AccountDetails accountDetails1 = null;
+        String id=null;
             try {
+                String URL ="http://localhost:8080/acc_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
+                RestTemplate restTemplate = new RestTemplate();
+                String accountDetailsString = restTemplate.getForObject(URL, String.class);
+                id=getDocId(accountDetailsString);
                 accountDetails1 = repository.get(id);
             } catch (DocumentNotFoundException ex) {
+                return new ResponseEntity<ApplicationError>(
+                        new ApplicationError(HttpStatus.NOT_FOUND.value(), "document to be updated not found"),
+                        HttpStatus.NOT_FOUND);
+            }catch (IOException ex) {
                 return new ResponseEntity<ApplicationError>(
                         new ApplicationError(HttpStatus.NOT_FOUND.value(), "document to be updated not found"),
                         HttpStatus.NOT_FOUND);
@@ -49,6 +62,20 @@ public class UpdateAccountApiController implements UpdateAccountApi {
             repository.update(accountDetails1);
             return new ResponseEntity<AccountDetails>(accountDetails1, HttpStatus.OK);
         }
+    private String getDocId(String str) throws IOException {
+        String id = null;
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(str);
+        JsonNode rowNode = root.path("rows");
+        if (rowNode.isArray()) {
+            // If this node an Arrray?
+        }
+        for (JsonNode node : rowNode) {
+            id = node.path("id").asText();
+
+        }
+        return id;
+    }
     }
 
 

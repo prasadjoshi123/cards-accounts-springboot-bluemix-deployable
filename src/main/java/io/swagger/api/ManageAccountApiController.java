@@ -1,6 +1,8 @@
 package io.swagger.api;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 
 import io.swagger.model.AccountDetails;
@@ -10,9 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -26,20 +30,41 @@ public class ManageAccountApiController implements ManageAccountApi {
     private AccountRepository acountRepository;
 
 //    @RequestMapping(value = "/manage-account/{accountNumber}")
-    @RequestMapping(value = "/manage-account/{id}")
-    public ResponseEntity<?> deleteAccountDetails(@PathVariable String id) {
+    //@RequestMapping(value = "/manage-account/{accountNumber}")
+    @RequestMapping(method = RequestMethod.DELETE, consumes = "application/json",value = "{accountNumber}")
+    public ResponseEntity<?> deleteAccountDetails(@PathVariable String accountNumber) {
         AccountDetails accountDetails =null;
-
+        String id=null;
         try {
-            accountDetails = acountRepository.get(id);
+            String URL ="http://localhost:8080/acc_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
+            RestTemplate restTemplate = new RestTemplate();
+            String accountDetailsString = restTemplate.getForObject(URL, String.class);
+            id=getDocId(accountDetailsString);
         } catch (DocumentNotFoundException ex) {
             return new ResponseEntity<ApplicationError>(
                     new ApplicationError(HttpStatus.NOT_FOUND.value(), "ID to be deleted not found"),
+                    HttpStatus.NOT_FOUND);
+        }catch (IOException ex) {
+            return new ResponseEntity<ApplicationError>(
+                    new ApplicationError(HttpStatus.NOT_FOUND.value(), "document to be updated not found"),
                     HttpStatus.NOT_FOUND);
         }
         acountRepository.remove(acountRepository.get(id));
         return new ResponseEntity<HttpStatus>(HttpStatus.OK);
 
     }
+    private String getDocId(String str) throws IOException {
+        String id = null;
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(str);
+        JsonNode rowNode = root.path("rows");
+        if (rowNode.isArray()) {
+            // If this node an Arrray?
+        }
+        for (JsonNode node : rowNode) {
+            id = node.path("id").asText();
 
+        }
+        return id;
+    }
 }
