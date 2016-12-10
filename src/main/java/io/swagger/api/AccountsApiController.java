@@ -16,12 +16,14 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.List;
-
+import io.swagger.configuration.CloudantBinding;
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringCodegen", date = "2016-11-01T18:09:28.587+05:30")
 
 @RestController public class AccountsApiController implements AccountsApi {
 
 	@Autowired private AccountRepository repository;
+	@Autowired
+	CloudantBinding cloudantBinding;
 
 	@RequestMapping(value = "/account", method = RequestMethod.POST) public ResponseEntity<?> createAccount(
 			@ApiParam(value = "The account to be created.") @RequestBody AccountDetails accountDetails) {
@@ -43,15 +45,13 @@ import java.util.List;
 
 	}
 
-	//@RequestMapping(value = "/accounts/{accountNumber}", method = RequestMethod.GET)
+
 	@RequestMapping(value = "/account/{accountNumber}", method = RequestMethod.GET) public ResponseEntity<?> getAccountDetails(
 			@PathVariable String accountNumber) {
-		//public ResponseEntity<?> getAccountDetails(@ApiParam(value = "The person's accountNumber",required=true ) @PathVariable("accountNumber") Integer accountNumber) {
 		AccountDetails accountDetails = new AccountDetails();
-		String stringToParse = null;
 		String id = null;
 		try {
-			String URL ="http://localhost:8080/acc_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
+			String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() +"/acc_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
 			RestTemplate restTemplate = new RestTemplate();
 			String accountDetailsString = restTemplate.getForObject(URL, String.class);
 			id=getDocId(accountDetailsString);

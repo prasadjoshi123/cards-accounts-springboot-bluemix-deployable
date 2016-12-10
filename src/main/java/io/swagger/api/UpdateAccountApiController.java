@@ -2,6 +2,7 @@ package io.swagger.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.configuration.CloudantBinding;
 import io.swagger.model.AccountDetails;
 
 import io.swagger.annotations.*;
@@ -29,14 +30,14 @@ public class UpdateAccountApiController implements UpdateAccountApi {
 
     @Autowired
     private AccountRepository repository;
-
+    @Autowired
+    CloudantBinding cloudantBinding;
     @RequestMapping(method = RequestMethod.PUT, value = "{accountNumber}", consumes = "application/json")
-    //public ResponseEntity<?> updateAccountDetails(@ApiParam(value = "The account to be updated."  ) @RequestBody AccountDetails accountDetails) {
-    public ResponseEntity<?> updateAccountDetails(@RequestBody AccountDetails accountDetails, @PathVariable String accountNumber) {
+     public ResponseEntity<?> updateAccountDetails(@RequestBody AccountDetails accountDetails, @PathVariable String accountNumber) {
             AccountDetails accountDetails1 = null;
         String id=null;
             try {
-                String URL ="http://localhost:8080/acc_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
+                String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() +"/acc_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
                 RestTemplate restTemplate = new RestTemplate();
                 String accountDetailsString = restTemplate.getForObject(URL, String.class);
                 id=getDocId(accountDetailsString);

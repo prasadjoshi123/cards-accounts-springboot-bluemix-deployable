@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 
+import io.swagger.configuration.CloudantBinding;
 import io.swagger.model.AccountDetails;
 import io.swagger.model.AccountRepository;
 import org.ektorp.DocumentNotFoundException;
@@ -28,15 +29,15 @@ import java.util.List;
 public class ManageAccountApiController implements ManageAccountApi {
     @Autowired
     private AccountRepository acountRepository;
+    @Autowired
+    CloudantBinding cloudantBinding;
 
-//    @RequestMapping(value = "/manage-account/{accountNumber}")
-    //@RequestMapping(value = "/manage-account/{accountNumber}")
     @RequestMapping(method = RequestMethod.DELETE, consumes = "application/json",value = "{accountNumber}")
     public ResponseEntity<?> deleteAccountDetails(@PathVariable String accountNumber) {
         AccountDetails accountDetails =null;
         String id=null;
         try {
-            String URL ="http://localhost:8080/acc_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
+            String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() +"/acc_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
             RestTemplate restTemplate = new RestTemplate();
             String accountDetailsString = restTemplate.getForObject(URL, String.class);
             id=getDocId(accountDetailsString);
