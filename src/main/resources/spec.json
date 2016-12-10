@@ -12,7 +12,7 @@
 	"basePath": "/card-accounts",
 	"name":"Account Details Service Routes",
 	"paths": {
-		"/account": {
+		"/accounts": {
 			"get": {
 				"summary": "Gets account details",
 				"description": "Returns a list containing all account details",
@@ -50,7 +50,7 @@
 				}
 			}
 		},
-		"/account/{accountNumber}": {
+		"/accounts/{accountNumber}": {
 			"get": {
 				"summary": "Gets the account details for the given account number",
 				"description": "Returns teh account details for the given account number",
@@ -83,14 +83,14 @@
 				"description": "Updates the account details for the given accountNumber",
 				"operationId":"updateAccountDetails",
 				"parameters": [
-					{
-						"name": "accountDetails",
-						"in": "body",
-						"description": "The account to be updated.",
-						"schema": {
-							"$ref": "#/definitions/AccountDetails"
-						}
-					}
+									{
+										"name": "accountDetails",
+										"in": "body",
+										"description": "The account to be updated.",
+										"schema": {
+											"$ref": "#/definitions/AccountDetails"
+										}
+									}
 				],
 				"responses": {
 					"200": {
@@ -103,61 +103,61 @@
 				}
 			}
 		}
-	,
-		"/manage-account/{accountNumber}": {
-			"delete": {
-				"summary": "Account details delete",
-				"description": "Deletes the account details for the given accountNumber",
-				"operationId":"deleetAccount",
+		,
+				"/manage-account/{accountNumber}": {
+					"delete": {
+						"summary": "Account details delete",
+						"description": "Deletes the account details for the given accountNumber",
+						"operationId":"deleetAccount",
 
-				"responses": {
-					"200": {
-						"description": "Account succesfully deleted"
+						"responses": {
+							"200": {
+								"description": "Account succesfully deleted"
 
-					},
-					"404": {
-						"description": "Account does not exist."
+							},
+							"404": {
+								"description": "Account does not exist."
+							}
+						}
 					}
-				}
-			}
 		},
 		"/card": {
-			"get": {
-				"summary": "Gets card details",
-				"description": "Returns a list containing all card details",
-				"operationId":"getAllCards",
-				"responses": {
-					"200": {
-						"description": "A list of Cards",
-						"schema": {
-							"$ref": "#/definitions/Cards"
+					"get": {
+						"summary": "Gets card details",
+						"description": "Returns a list containing all card details",
+						"operationId":"getAllCards",
+						"responses": {
+							"200": {
+								"description": "A list of Cards",
+								"schema": {
+									"$ref": "#/definitions/Cards"
+								}
+							}
 						}
-					}
-				}
-			},
-			"post": {
-				"summary": "Creates a card",
-				"description": "Adds a new card to the Finkit system.",
-				"operationId":"createCard",
-				"parameters": [
-					{
-						"name": "cardDetails",
-						"in": "body",
-						"description": "The card to be created.",
-						"schema": {
-							"$ref": "#/definitions/CardDetails"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Card succesfully created."
 					},
-					"400": {
-						"description": "Error creating the card"
+					"post": {
+						"summary": "Creates a card",
+						"description": "Adds a new card to the Finkit system.",
+						"operationId":"createCard",
+						"parameters": [
+							{
+								"name": "cardDetails",
+								"in": "body",
+								"description": "The card to be created.",
+								"schema": {
+									"$ref": "#/definitions/CardDetails"
+								}
+							}
+						],
+						"responses": {
+							"200": {
+								"description": "Card succesfully created."
+							},
+							"400": {
+								"description": "Error creating the card"
+							}
+						}
 					}
-				}
-			}
 		},"/update-card/{cardNumber}": {
 			"put": {
 				"summary": "Card details update",
@@ -202,44 +202,44 @@
 			}
 		},
 		"/fetch-cards/{customerId}": {
-			"get": {
-				"summary": "Fetch Card details for the customer",
-				"description": "Fetches the card details for the given customer id",
-				"operationId":"fetchCardsForCustomer",
+					"get": {
+						"summary": "Fetch Card details for the customer",
+						"description": "Fetches the card details for the given customer id",
+						"operationId":"fetchCardsForCustomer",
 
-				"responses": {
-					"200": {
-						"description": "Card Details succesfully updated",
-						"schema": {
-							"$ref": "#/definitions/Cards"
+						"responses": {
+							"200": {
+								"description": "Card Details succesfully updated",
+								"schema": {
+															"$ref": "#/definitions/Cards"
 						}
 
-					},
-					"404": {
-						"description": "Card does not exist."
+							},
+							"404": {
+								"description": "Card does not exist."
+							}
+						}
 					}
-				}
-			}
 		},
 		"/fetch-card-details/{cardNumber}": {
-			"get": {
-				"summary": "Fetch Card details for given card number",
-				"description": "Fetches the card details for the given card number",
-				"operationId":"fetchCardsDetails",
+					"get": {
+						"summary": "Fetch Card details for given card number",
+						"description": "Fetches the card details for the given card number",
+						"operationId":"fetchCardsDetails",
 
-				"responses": {
-					"200": {
-						"description": "Card Details of the given card number",
-						"schema": {
-							"$ref": "#/definitions/CardDetails"
+						"responses": {
+							"200": {
+								"description": "Card Details of the given card number",
+								"schema": {
+															"$ref": "#/definitions/CardDetails"
 						}
 
-					},
-					"404": {
-						"description": "Card does not exist."
+							},
+							"404": {
+								"description": "Card does not exist."
+							}
+						}
 					}
-				}
-			}
 		}
 	},
 	"definitions": {
@@ -247,28 +247,28 @@
 			"required": [
 				"customerId"
 			],"properties": {
-				"userName": {
-					"type": "string"
-				},
-				"customerId": {
-					"type": "integer"
-				},
-				"accountType": {
-					"type": "string"
-				},
-				"accountStatus": {
-					"type": "string"
-				},
-				"accountBalance": {
-					"type": "float"
-				},
-				"address": {
-					"type": "string"
-				},
-				"mobileNumber": {
-					"type": "integer"
-				}
-			}},"CardDetails": {
+					"userName": {
+						"type": "string"
+					},
+					"customerId": {
+						"type": "integer"
+					},
+					"accountType": {
+						"type": "string"
+					},
+					"accountStatus": {
+						"type": "string"
+					},
+					"accountBalance": {
+						"type": "float"
+					},
+					"address": {
+						"type": "string"
+					},
+					"mobileNumber": {
+						"type": "integer"
+		}
+		}},"CardDetails": {
 			"properties": {
 				"cardNumber": {
 					"type": "integer"
@@ -300,10 +300,10 @@
 			}
 		},
 		"Cards": {
-			"type": "array",
-			"items": {
-				"$ref": "#/definitions/CardDetails"
-			}
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/CardDetails"
+					}
 		}
 	}
 }

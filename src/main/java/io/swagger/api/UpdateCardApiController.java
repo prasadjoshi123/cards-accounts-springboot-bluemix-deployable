@@ -2,6 +2,7 @@ package io.swagger.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.configuration.CloudantBinding;
 import io.swagger.model.CardDetails;
 
 import io.swagger.annotations.*;
@@ -34,28 +35,28 @@ import java.util.List;
 public class UpdateCardApiController implements UpdateCardApi {
     @Autowired
     private CardRepository repository;
+    @Autowired
+    CloudantBinding cloudantBinding;
 
     @RequestMapping(method = RequestMethod.PUT, value = "{cardNumber}", consumes = "application/json")
     public ResponseEntity<?> updateCardDetails(@RequestBody CardDetails cardD, @PathVariable String cardNumber) {
         CardDetails cardDetails = null;
         String stringToParse = null;
         try {
-            String URL = "http://localhost:8080/card_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
+            String URL ="http://"+cloudantBinding.getHost()+":"+cloudantBinding.getPort()+"/card_db/_design/CardDetails/_search/search_card_details?q=cardNumber:"+cardNumber;
             RestTemplate restTemplate = new RestTemplate();
             stringToParse = restTemplate.getForObject(URL, String.class);
             String id=getDocId(stringToParse);
             cardDetails=repository.get(id);
         } catch (DocumentNotFoundException ex) {
             return new ResponseEntity<ApplicationError>(
-                    new ApplicationError(HttpStatus.NOT_FOUND.value(), "document to be updated not found"),
+                    new ApplicationError(HttpStatus.NOT_FOUND.value(), "Document to be updated not found"),
                     HttpStatus.NOT_FOUND);
         } catch (IOException ex) {
             return new ResponseEntity<ApplicationError>(
                     new ApplicationError(HttpStatus.NOT_FOUND.value(), "document to be updated not found"),
                     HttpStatus.NOT_FOUND);
         }
-
-        System.out.println("uuuuuuuuuuuuuuuu" + cardD.getCardNumber());
         cardDetails.setCardNumber(cardD.getCardNumber());
         cardDetails.setCardApplyMode(cardD.getCardApplyMode());
         cardDetails.setCardStatus(cardD.getCardStatus());

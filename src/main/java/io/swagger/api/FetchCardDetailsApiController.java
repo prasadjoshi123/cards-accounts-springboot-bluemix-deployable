@@ -1,20 +1,26 @@
 package io.swagger.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.configuration.CloudantBinding;
 import io.swagger.model.CardDetails;
 
 import io.swagger.annotations.*;
 
 import io.swagger.model.CardRepository;
-import org.ektorp.DocumentNotFoundException;
-import org.ektorp.ViewQuery;
-import org.ektorp.ViewResult;
+import org.ektorp.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.ServletContextAware;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.handler.MessageContext;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import static javax.servlet.SessionTrackingMode.URL;
@@ -25,16 +31,43 @@ import static javax.servlet.SessionTrackingMode.URL;
 @SpringBootApplication
 @RestController
 @RequestMapping("/fetch-card-details")
-public class FetchCardDetailsApiController implements FetchCardDetailsApi {
+public class FetchCardDetailsApiController implements FetchCardDetailsApi{
     @Autowired
     private CardRepository repository;
+    @Autowired
+    CloudantBinding cloudantBinding;
 
-    @RequestMapping(method = RequestMethod.GET, value = "{cardNumber}", consumes = "application/json")
-    public ResponseEntity<?> fetchCardsDetailsById(@PathVariable String cardNumber) {
-        String URL ="http://localhost:8080/card_db/_design/CardDetails/_search/search_card_details?q=cardNumber:"+cardNumber;
-        RestTemplate restTemplate = new RestTemplate();
-        String card = restTemplate.getForObject(URL, String.class);
-        return new ResponseEntity<String>(card, HttpStatus.OK);
+    String id = null;
+   @RequestMapping(value = "/{cardNumber}", method = RequestMethod.GET, produces = "application/json")
+   public ResponseEntity<?> fetchCardsDetailsById(@PathVariable String cardNumber) {
+       CardDetails cardDetails=new CardDetails();
+       try {
+           String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/card_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
+           RestTemplate restTemplate = new RestTemplate();
+           String accountDetailsString = restTemplate.getForObject(URL, String.class);
+           id=getDocId(accountDetailsString);
+           cardDetails = repository.get(id);
+       }catch (IOException ex) {
+           return new ResponseEntity<ApplicationError>(
+                   new ApplicationError(HttpStatus.NOT_FOUND.value(), "Card Number not found"),
+                   HttpStatus.NOT_FOUND);
+       }
+       return new ResponseEntity<CardDetails>(cardDetails, HttpStatus.OK);
+   }
+
+    private String getDocId(String str) throws IOException {
+        String id = null;
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(str);
+        JsonNode rowNode = root.path("rows");
+        if (rowNode.isArray()) {
+            // If this node an Arrray?
+        }
+        for (JsonNode node : rowNode) {
+            id = node.path("id").asText();
+
+        }
+        return id;
     }
 
 }

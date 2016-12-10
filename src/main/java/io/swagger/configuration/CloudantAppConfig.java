@@ -2,33 +2,37 @@ package io.swagger.configuration;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
+import org.ektorp.http.HttpClient;
+import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbConnector;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
-import org.springframework.cloud.config.java.AbstractCloudConfig;
+import org.ektorp.impl.StdCouchDbInstance;
+import org.ektorp.http.StdHttpClient.Builder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
-public class CloudantAppConfig extends AbstractCloudConfig{
-	
-	/*@Bean
-	  public CouchDbConnector couchDbConnector(CouchDbInstance couchDbInstance) {
-	    CouchDbConnector cardsConnector = new StdCouchDbConnector("card_db", couchDbInstance);
-	    cardsConnector.createDatabaseIfNotExists();
-	    return cardsConnector;
-	  }*/
+@Component
+public class CloudantAppConfig {
+
+	@Autowired
+	CloudantBinding bluemixDbaas;
+
 	@Bean
 	public CouchDbConnector couchDbConnector(CouchDbInstance couchDbInstance) {
-		CouchDbConnector accountsConnector = new StdCouchDbConnector("acc_db", couchDbInstance);
-		accountsConnector.createDatabaseIfNotExists();
-		return accountsConnector;
+		CouchDbConnector connector = new StdCouchDbConnector("card_db", couchDbInstance);
+		connector.createDatabaseIfNotExists();
+		return connector;
 	}
 
 	@Bean
-    public CouchDbInstance couchDbInstance() {
-      CouchDbInstance instance = connectionFactory().service(CouchDbInstance.class);
-      return instance;
-    }
+	public CouchDbInstance couchDbInstance() {
+
+		Builder builder = new Builder().host(bluemixDbaas.getHost()).port(bluemixDbaas.getPort())
+				.username(bluemixDbaas.getUser()).password(bluemixDbaas.getPwd())
+				.enableSSL(bluemixDbaas.isSslEnabled());
+		HttpClient httpClient = builder.build();
+		CouchDbInstance instance = new StdCouchDbInstance(httpClient);
+		return instance;
+	}
 
 }

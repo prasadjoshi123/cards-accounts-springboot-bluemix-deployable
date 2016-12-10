@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 
+import io.swagger.configuration.CloudantBinding;
 import io.swagger.model.CardDetails;
 import io.swagger.model.CardRepository;
 import org.ektorp.DocumentNotFoundException;
@@ -35,13 +36,15 @@ public class ManageCardApiController implements ManageCardApi {
 
     @Autowired
     private CardRepository repository;
+    @Autowired
+    CloudantBinding cloudantBinding;
 
     @RequestMapping(method = RequestMethod.DELETE, consumes = "application/json",value = "{cardNumber}")
     public ResponseEntity<?> deleteCardDetails(@PathVariable String cardNumber) {
         CardDetails cardDetails = null;
         String stringToParse = null;
         try {
-            String URL = "http://localhost:8080/card_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
+            String URL ="http://"+cloudantBinding.getHost()+":"+cloudantBinding.getPort()+"/card_db/_design/CardDetails/_search/search_card_details?q=cardNumber:"+cardNumber;
             RestTemplate restTemplate = new RestTemplate();
             stringToParse = restTemplate.getForObject(URL, String.class);
             String id=getDocId(stringToParse);
