@@ -39,7 +39,7 @@ public class ManageCardApiController implements ManageCardApi {
     @Autowired
     CloudantBinding cloudantBinding;
 
-    @RequestMapping(method = RequestMethod.DELETE, consumes = "application/json",value = "{cardNumber}")
+    @RequestMapping(method = RequestMethod.DELETE,value = "{cardNumber}")
     public ResponseEntity<?> deleteCardDetails(@PathVariable String cardNumber) {
         CardDetails cardDetails = null;
         String stringToParse = null;

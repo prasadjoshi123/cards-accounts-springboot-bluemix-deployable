@@ -16,9 +16,4 @@ public class AccountRepository extends CouchDbRepositorySupport<AccountDetails>{
 	    super(AccountDetails.class, connector);
 	    initStandardDesignDocument();
 	  }
-	
-	/*@GenerateView
-	public List<Account> findByAccountNumber(String accountNumber){
-		return queryView("By_AccountNumber", accountNumber);
-	}*/
 }

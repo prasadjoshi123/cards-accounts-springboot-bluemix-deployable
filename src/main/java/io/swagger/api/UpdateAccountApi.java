@@ -26,6 +26,5 @@ public interface UpdateAccountApi {
         @ApiResponse(code = 404, message = "Account does not exist.", response = Void.class) })
     @RequestMapping(value = "/update-account/{accountNumber}",
         method = RequestMethod.PUT)
-    //ResponseEntity<?> updateAccountDetails(@ApiParam(value = "The account to be updated.") @RequestBody AccountDetails accountDetails);
     ResponseEntity<?> updateAccountDetails(@RequestBody AccountDetails accountDetails, @PathVariable String id);
 }

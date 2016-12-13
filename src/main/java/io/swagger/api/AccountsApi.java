@@ -26,7 +26,7 @@ public interface AccountsApi {
 			@ApiResponse(code = 400, message = "Error creating the account", response = Void.class) })
 	@RequestMapping(value = "/account", method = RequestMethod.POST)
 	ResponseEntity<?> createAccount(
-			@ApiParam(value = "The account to be created.") @RequestBody AccountDetails accountDetails);
+            @ApiParam(value = "The account to be created.") @RequestBody AccountDetails accountDetails);
 
 	@ApiOperation(value = "Gets the account details for the given account number", notes = "Returns teh account details for the given account number", response = AccountDetails.class, tags = {})
 	@ApiResponses(value = {

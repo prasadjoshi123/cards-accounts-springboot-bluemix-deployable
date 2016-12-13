@@ -19,20 +19,4 @@ public class CardRepository extends CouchDbRepositorySupport<CardDetails>{
 		initStandardDesignDocument();
 	}
 
-	
-	public List<CardDetails> findByCardNumber(String cardNumber) {
-		//ViewQuery query = createQuery("search_card_details")
-
-		ViewQuery query = createQuery("searchCardNumber")
-				//.group(true)
-				.dbPath(db.path())
-				.includeDocs(true)
-				.designDocId(stdDesignDocumentId)
-				.key(new String[]{cardNumber});
-
-		String str=query.buildQuery();
-		List<CardDetails> cardDetails = db.queryView(query, CardDetails.class);
-		return cardDetails;
-	}
-
 }

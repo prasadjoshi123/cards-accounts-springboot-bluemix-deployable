@@ -37,7 +37,7 @@ public class UpdateAccountApiController implements UpdateAccountApi {
             AccountDetails accountDetails1 = null;
         String id=null;
             try {
-                String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() +"/acc_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
+                String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() +"/account_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
                 RestTemplate restTemplate = new RestTemplate();
                 String accountDetailsString = restTemplate.getForObject(URL, String.class);
                 id=getDocId(accountDetailsString);
@@ -51,7 +51,6 @@ public class UpdateAccountApiController implements UpdateAccountApi {
                         new ApplicationError(HttpStatus.NOT_FOUND.value(), "document to be updated not found"),
                         HttpStatus.NOT_FOUND);
             }
-            System.out.println("Account Number......"+accountDetails.getAccountNumber());
             accountDetails1.setAccountNumber(accountDetails.getAccountNumber());
             accountDetails1.setAccountStatus(accountDetails.getAccountStatus());
             accountDetails1.setAccountType(accountDetails.getAccountType());

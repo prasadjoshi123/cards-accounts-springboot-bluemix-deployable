@@ -25,7 +25,7 @@ import io.swagger.configuration.CloudantBinding;
 	@Autowired
 	CloudantBinding cloudantBinding;
 
-	@RequestMapping(value = "/account", method = RequestMethod.POST) public ResponseEntity<?> createAccount(
+	@RequestMapping(value = "/accounts", method = RequestMethod.POST) public ResponseEntity<?> createAccount(
 			@ApiParam(value = "The account to be created.") @RequestBody AccountDetails accountDetails) {
 		try {
 			/**
@@ -46,12 +46,12 @@ import io.swagger.configuration.CloudantBinding;
 	}
 
 
-	@RequestMapping(value = "/account/{accountNumber}", method = RequestMethod.GET) public ResponseEntity<?> getAccountDetails(
+	@RequestMapping(value = "/accounts/{accountNumber}", method = RequestMethod.GET) public ResponseEntity<?> getAccountDetails(
 			@PathVariable String accountNumber) {
 		AccountDetails accountDetails = new AccountDetails();
 		String id = null;
 		try {
-			String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() +"/acc_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
+			String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() +"/account_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
 			RestTemplate restTemplate = new RestTemplate();
 			String accountDetailsString = restTemplate.getForObject(URL, String.class);
 			id=getDocId(accountDetailsString);
@@ -72,7 +72,7 @@ import io.swagger.configuration.CloudantBinding;
 		return new ResponseEntity<AccountDetails>(accountDetails, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/account", method = RequestMethod.GET) public ResponseEntity<?> getAllAccounts() {
+	@RequestMapping(value = "/accounts", method = RequestMethod.GET) public ResponseEntity<?> getAllAccounts() {
 		List<AccountDetails> allAccounts = repository.getAll();
 		if (allAccounts == null || allAccounts.isEmpty())
 			return new ResponseEntity<ApplicationError>(

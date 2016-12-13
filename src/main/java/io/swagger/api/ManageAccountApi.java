@@ -24,7 +24,6 @@ public interface ManageAccountApi {
         @ApiResponse(code = 200, message = "Account succesfully deleted", response = Void.class),
         @ApiResponse(code = 404, message = "Account does not exist.", response = Void.class) })
     @RequestMapping(value = "/manage-account/{id}",
-    //@RequestMapping(value = "/manage-account/{accountNumber}",
         method = RequestMethod.DELETE)
     ResponseEntity<?> deleteAccountDetails(@PathVariable String id);
 

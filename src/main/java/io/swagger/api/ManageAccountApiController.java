@@ -32,12 +32,12 @@ public class ManageAccountApiController implements ManageAccountApi {
     @Autowired
     CloudantBinding cloudantBinding;
 
-    @RequestMapping(method = RequestMethod.DELETE, consumes = "application/json",value = "{accountNumber}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "{accountNumber}")
     public ResponseEntity<?> deleteAccountDetails(@PathVariable String accountNumber) {
         AccountDetails accountDetails =null;
         String id=null;
         try {
-            String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() +"/acc_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
+            String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() +"/account_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
             RestTemplate restTemplate = new RestTemplate();
             String accountDetailsString = restTemplate.getForObject(URL, String.class);
             id=getDocId(accountDetailsString);

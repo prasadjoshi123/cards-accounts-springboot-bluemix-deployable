@@ -20,7 +20,7 @@ public interface CardApi {
         @ApiResponse(code = 400, message = "Error creating the card", response = Void.class) })
     @RequestMapping(value = "/card",
         method = RequestMethod.POST)
-    ResponseEntity<?> createCard(@ApiParam(value = "The card to be created."  ) @RequestBody CardDetails cardDetails);
+    ResponseEntity<?> createCard(@ApiParam(value = "The card to be created.") @RequestBody CardDetails cardDetails);
 
 
     @ApiOperation(value = "Gets card details", notes = "Returns a list containing all card details", response = Cards.class, tags={  })

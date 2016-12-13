@@ -13,7 +13,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @JsonIgnoreProperties({"id", "revision"})
 public class CardDetails   {
 
-  @org.codehaus.jackson.annotate.JsonProperty("_id")
+  @JsonProperty("_id")
   private String id = null;
 
   public String getRevision() {
@@ -24,7 +24,7 @@ public class CardDetails   {
     this.revision = revision;
   }
 
-  @org.codehaus.jackson.annotate.JsonProperty("_rev")
+  @JsonProperty("_rev")
   private String revision;
 
   @JsonProperty("cardNumber")
@@ -78,11 +78,6 @@ public class CardDetails   {
   public void setCardNumber(Integer cardNumber) {
     this.cardNumber = cardNumber;
   }
-
-  /*public CardDetails id(String id) {
-    this.id = id;
-    return this;
-  }*/
 
   /**
    * Get customerId
@@ -189,7 +184,7 @@ public class CardDetails   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -231,7 +226,7 @@ public class CardDetails   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

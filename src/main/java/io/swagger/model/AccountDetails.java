@@ -32,6 +32,9 @@ public class AccountDetails   {
   @JsonProperty("accountStatus")
   private String accountStatus = null;
 
+  @JsonProperty("accountBalance")
+  private Float accountBalance=null;
+
   @JsonProperty("address")
   private String address = null;
 
@@ -169,6 +172,16 @@ public class AccountDetails   {
     this.mobileNumber = mobileNumber;
     return this;
   }
+
+
+  @ApiModelProperty(value = "")
+  public Float getAccountBalance() {
+    return accountBalance;
+  }
+
+  public void setAccountBalance(Float accountBalance) {
+    this.accountBalance = accountBalance;
+  }
   /**
    * Get mobileNumber
    * @return mobileNumber
@@ -184,7 +197,7 @@ public class AccountDetails   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -196,6 +209,7 @@ public class AccountDetails   {
         Objects.equals(this.customerId, accountDetails.customerId) &&
         Objects.equals(this.accountType, accountDetails.accountType) &&
         Objects.equals(this.accountStatus, accountDetails.accountStatus) &&
+        Objects.equals(this.accountBalance, accountDetails.accountBalance) &&
         Objects.equals(this.address, accountDetails.address) &&
         Objects.equals(this.mobileNumber, accountDetails.mobileNumber) &&
         Objects.equals(this.accountNumber, accountDetails.accountNumber);
@@ -203,7 +217,7 @@ public class AccountDetails   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(userName, customerId, accountType, accountStatus, address, mobileNumber,accountNumber);
+    return Objects.hash(userName, customerId, accountType, accountStatus, accountBalance,address, mobileNumber,accountNumber);
   }
 
   @Override
@@ -215,6 +229,7 @@ public class AccountDetails   {
     sb.append("    customerId: ").append(toIndentedString(customerId)).append("\n");
     sb.append("    accountType: ").append(toIndentedString(accountType)).append("\n");
     sb.append("    accountStatus: ").append(toIndentedString(accountStatus)).append("\n");
+    sb.append("    accountBalance: ").append(toIndentedString(accountBalance)).append("\n");
     sb.append("    address: ").append(toIndentedString(address)).append("\n");
     sb.append("    mobileNumber: ").append(toIndentedString(mobileNumber)).append("\n");
     sb.append("    accountNumber: ").append(toIndentedString(accountNumber)).append("\n");
@@ -226,7 +241,7 @@ public class AccountDetails   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
