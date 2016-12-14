@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         format = {"pretty", "html:target/cucumber"},
-        glue = "com.cardaccount.bdd.steps",
+        glue = "com.cardaccount.bdd.accountsteps",
         features = "classpath:cucumber/account.feature"
 )
 public class RunAccountTest {
