@@ -1,0 +1,10 @@
+{
+  "userName": "Garima Gupta",
+  "customerId": 890,
+  "accountType": "Saving",
+  "accountStatus": "Active",
+  "accountBalance": 123.34,
+  "address": "Gurgaon",
+  "accountNumber": 1234,
+  "mobileNumber": 9899876285
+}
