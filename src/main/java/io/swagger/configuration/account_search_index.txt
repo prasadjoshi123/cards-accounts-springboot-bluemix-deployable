@@ -1,0 +1,34 @@
+Save to Design Document: AccountDetails
+
+Index name : search_account_details
+
+
+Search index function:
+
+function(doc){
+  index("default", doc._id);
+  if(doc.userName ){
+    index("userName", doc.userName , {"facet": true, "store": true});
+  }
+    if(doc.customerId ){
+    index("customerId", doc.customerId , {"facet": true, "store": true});
+  }
+  if(doc.accountType ){
+    index("accountType", doc.accountType , {"facet": true, "store": true});
+  }
+  if (doc.accountStatus){
+    index("accountStatus", doc.accountStatus , {"store": true});
+  }
+  if(doc.address){
+    index("address", doc.address, {"facet": true, "store": true});
+  }
+    if(doc.accountNumber){
+    index("accountNumber", doc.accountNumber, {"facet": true, "store": true});
+  }
+  if(doc.mobileNumber){
+    index("mobileNumber", doc.mobileNumber, {"facet": true, "store": true});
+  }
+  if (doc['class']){
+    index("class", doc['class'], {"facet": true, "store": true});
+  }
+}

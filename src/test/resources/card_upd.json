@@ -1,10 +1,9 @@
 {
-  "userName": "Garima Gupta",
-  "customerId": 890,
-  "accountType": "Saving",
-  "accountStatus": "Active",
-  "accountBalance": 123.34,
-  "address": "Gurgaon",
-  "accountNumber": 1234,
-  "mobileNumber": 9899876285
+  "cardNumber": 1234,
+  "cardType": "Atm",
+  "custId": 12345,
+  "cardStatus": "InActive",
+  "startDate": "12/12/2017",
+  "expiryDate": "12/12/2020",
+  "cardApplyMode": "web"
 }

@@ -1,7 +1,6 @@
 
-package com.cardaccount.bdd.steps;
+package com.cardaccount.bdd.accountsteps;
 
-import io.swagger.model.AccountDetails;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;

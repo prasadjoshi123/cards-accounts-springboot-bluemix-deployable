@@ -1,0 +1,38 @@
+
+Design Document: CardDetails
+
+Index name : search_card_details
+
+Search Index function:
+
+
+function(doc){
+  index("default", doc._id);
+  if(doc.cardNumber){
+    index("cardNumber", doc.cardNumber, {"facet": true, "store": true});
+  }
+    if(doc.customerName){
+    index("customerName", doc.customerName, {"facet": true, "store": true});
+  }
+  if(doc.cardType){
+    index("cardType", doc.cardType, {"facet": true, "store": true});
+  }
+  if (doc.custId){
+    index("custId", doc.custId, {"store": true});
+  }
+  if(doc.cardStatus){
+    index("cardStatus", doc.cardStatus, {"facet": true, "store": true});
+  }
+    if(doc.startDate){
+    index("startDate", doc.startDate, {"facet": true, "store": true});
+  }
+  if(doc.expiryDate){
+    index("expiryDate", doc.expiryDate, {"facet": true, "store": true});
+  }
+  if (doc.cardApplyMode){
+    index("cardApplyMode", doc.cardApplyMode, {"store": true});
+  }
+  if (doc['class']){
+    index("class", doc['class'], {"facet": true, "store": true});
+  }
+}

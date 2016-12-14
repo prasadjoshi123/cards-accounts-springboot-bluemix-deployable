@@ -1,4 +1,4 @@
-package io.swagger.test;
+package com.cardaccount.mockito;
 
 import io.swagger.api.ApplicationError;
 import io.swagger.api.ManageAccountApiController;

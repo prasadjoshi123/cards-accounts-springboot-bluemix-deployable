@@ -1,13 +1,11 @@
-package io.swagger.test;
+package com.cardaccount.mockito;
 
-import io.swagger.api.AccountsApiController;
 import io.swagger.api.ApplicationError;
 import io.swagger.api.UpdateAccountApiController;
 import io.swagger.model.AccountDetails;
 import io.swagger.model.AccountRepository;
 import junit.framework.Assert;
 import org.ektorp.DocumentNotFoundException;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,9 +15,6 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.mockito.Mockito.when;
 
