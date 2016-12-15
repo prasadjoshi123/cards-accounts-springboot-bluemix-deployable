@@ -10,11 +10,11 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * CardDetails
  */
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringCodegen", date = "2016-11-01T18:09:28.587+05:30")
-@JsonIgnoreProperties({"id", "revision"})
+@JsonIgnoreProperties({"id", "revision", "dbRecordType"})
 public class CardDetails   {
 
   @JsonProperty("_id")
-  private String id = null;
+  private String id ;
 
   public String getRevision() {
     return revision;
@@ -26,6 +26,14 @@ public class CardDetails   {
 
   @JsonProperty("_rev")
   private String revision;
+
+  public String getDbRecordType() {
+    return dbRecordType;
+  }
+
+  public void setDbRecordType(String dbRecordType) {
+    this.dbRecordType = dbRecordType;
+  }
 
   @JsonProperty("dbRecordType ")
   private String dbRecordType  = "cards";
@@ -201,6 +209,7 @@ public class CardDetails   {
             Objects.equals(this.cardStatus, cardDetails.cardStatus) &&
             Objects.equals(this.startDate, cardDetails.startDate) &&
             Objects.equals(this.expiryDate, cardDetails.expiryDate) &&
+            Objects.equals(this.dbRecordType, cardDetails.dbRecordType) &&
             Objects.equals(this.cardApplyMode, cardDetails.cardApplyMode);
   }
 
@@ -221,6 +230,7 @@ public class CardDetails   {
     sb.append("    startDate: ").append(toIndentedString(startDate)).append("\n");
     sb.append("    expiryDate: ").append(toIndentedString(expiryDate)).append("\n");
     sb.append("    cardApplyMode: ").append(toIndentedString(cardApplyMode)).append("\n");
+    sb.append("    dbRecordType: ").append(toIndentedString(dbRecordType)).append("\n");
     sb.append("}");
     return sb.toString();
   }
