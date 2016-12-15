@@ -27,6 +27,9 @@ public class CardDetails   {
   @JsonProperty("_rev")
   private String revision;
 
+  @JsonProperty("dbRecordType ")
+  private String dbRecordType  = "cards";
+
   @JsonProperty("cardNumber")
   private Integer cardNumber = null;
 

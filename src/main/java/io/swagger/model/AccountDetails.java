@@ -20,6 +20,9 @@ public class AccountDetails   {
   @org.codehaus.jackson.annotate.JsonProperty("_rev")
   private String revision;
 
+  @JsonProperty("dbRecordType ")
+  private String dbRecordType  = "accounts";
+
   @JsonProperty("userName")
   private String userName = null;
 
@@ -60,6 +63,13 @@ public class AccountDetails   {
     this.revision = revision;
   }
 
+  public String getDbRecordType() {
+    return dbRecordType;
+  }
+
+  public void setDbRecordType(String dbRecordType) {
+    this.dbRecordType = dbRecordType;
+  }
   public AccountDetails userName(String userName) {
     this.userName = userName;
     return this;
