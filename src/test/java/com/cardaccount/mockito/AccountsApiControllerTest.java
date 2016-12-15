@@ -2,6 +2,7 @@ package com.cardaccount.mockito;
 
 import io.swagger.api.AccountsApiController;
 import io.swagger.api.ApplicationError;
+import io.swagger.configuration.CloudantBinding;
 import io.swagger.model.AccountDetails;
 import io.swagger.model.AccountRepository;
 import junit.framework.Assert;
@@ -15,33 +16,42 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
  * Created by Sriram Sundararajan on 12/7/2016.
  */
-@RunWith(MockitoJUnitRunner.class)
-public class AccountsApiControllerTest {
+@RunWith(MockitoJUnitRunner.class) public class AccountsApiControllerTest {
 	private final AccountDetails validAccountDetails = new AccountDetails();
 
 	// This accountId will be treated as a valid account Id for this unit test program
 	private final String validAccountId = "1000";
 
 	// The class to be tested , where the mock invocations need to be stubbed
-	@InjectMocks
-	AccountsApiController accountsApiController = new AccountsApiController();
+	@InjectMocks AccountsApiController accountsApiController = new AccountsApiController();
 
 	// The class whose invocations need to be stubbed
-	@Mock
-	private AccountRepository repository;
+	@Mock private AccountRepository repository;
+
+	// Setting up mocked rest template services
+	private final Integer validPortNumber = 8080;
+	private final String validHostName = "http://ibm.finkit";
+
+	@Mock RestTemplate restTemplate;
+
+	@Mock CloudantBinding cloudantBinding;
 
 	// The method to initialize the mock objects
-	@Before
-	public void setUp() {
+	@Before public void setUp() {
 		// Setting up the details for a valid account detail
 		validAccountDetails.setAccountNumber(1000);
 		validAccountDetails.setAccountType("Savings");
@@ -55,7 +65,12 @@ public class AccountsApiControllerTest {
 		 * with a value of validAccountId=1000; the response will be mocked
 		 * with the validAccountDetails object
 		 */
-		when(repository.get(validAccountId)).thenReturn(validAccountDetails);
+		when(repository.get(anyString())).thenReturn(validAccountDetails);
+
+		when(restTemplate.getForObject(anyString(), eq(String.class))).thenReturn(validAccountId);
+
+		when(cloudantBinding.getHost()).thenReturn(validHostName);
+		when(cloudantBinding.getPort()).thenReturn(validPortNumber);
 
 		/** Do nothing when the method is called,usually used for a method
 		 that returns void **/
@@ -63,9 +78,7 @@ public class AccountsApiControllerTest {
 
 	}
 
-	@Test
-	public void testGetAllAccounts() {
-		System.out.println("testGetAllAccounts");
+	@Test public void testGetAllAccounts() {
 		List<AccountDetails> allAccounts = new ArrayList<AccountDetails>();
 		allAccounts.add(validAccountDetails);
 		when(repository.getAll()).thenReturn(allAccounts);
@@ -85,9 +98,7 @@ public class AccountsApiControllerTest {
 
 	}
 
-	@Test
-	public void testGetAllAccountsForEmptyResults() {
-		System.out.println("testGetAllAccounts");
+	@Test public void testGetAllAccountsForEmptyResults() {
 		when(repository.getAll()).thenReturn(null);
 
 		ResponseEntity response = accountsApiController.getAllAccounts();
@@ -102,9 +113,7 @@ public class AccountsApiControllerTest {
 
 	}
 
-	@Test
-	public void testGetAccountDetailsWithoutAccountNumber() {
-		System.out.println("testfetchAccounts");
+	@Test public void testGetAccountDetailsWithoutAccountNumber() {
 		ResponseEntity response = accountsApiController.getAccountDetails(null);
 		String actualErrorMessage = "";
 		if (response.getBody() instanceof ApplicationError) {
@@ -117,10 +126,7 @@ public class AccountsApiControllerTest {
 
 	}
 
-	@Test
-	public void testGetAccountDetailsWithValidAccountNumber() {
-		System.out.println("testGetAccountDetailsWithValidAccountNumber");
-
+	@Test public void testGetAccountDetailsWithValidAccountNumber() throws IOException {
 		ResponseEntity response = accountsApiController.getAccountDetails(validAccountId);
 
 		String actualUserName = null;
@@ -134,8 +140,7 @@ public class AccountsApiControllerTest {
 
 	}
 
-	@Test
-	public void testCreateAccountWithoutUserName() {
+	@Test public void testCreateAccountWithoutUserName() {
 		AccountDetails invalidAccountDetails = new AccountDetails();
 		invalidAccountDetails.setUserName(null);
 		invalidAccountDetails.setAddress("Chennai");
@@ -154,8 +159,7 @@ public class AccountsApiControllerTest {
 
 	}
 
-	@Test
-	public void testCreateAccountWithoutMobileNumber() {
+	@Test public void testCreateAccountWithoutMobileNumber() {
 		AccountDetails invalidAccountDetails = new AccountDetails();
 		invalidAccountDetails.setUserName("Arjun");
 		invalidAccountDetails.setAddress("Chennai");
@@ -174,8 +178,7 @@ public class AccountsApiControllerTest {
 
 	}
 
-	@Test
-	public void testCreateAccountWithoutAddress() {
+	@Test public void testCreateAccountWithoutAddress() {
 		AccountDetails invalidAccountDetails = new AccountDetails();
 		invalidAccountDetails.setUserName("Arjun");
 		invalidAccountDetails.setAddress(null);
@@ -194,8 +197,7 @@ public class AccountsApiControllerTest {
 
 	}
 
-	@Test
-	public void testCreateAccountWithValidAccountNumber() {
+	@Test public void testCreateAccountWithValidAccountNumber() {
 		ResponseEntity response = accountsApiController.createAccount(validAccountDetails);
 
 		String actualUserName = null;
@@ -209,8 +211,7 @@ public class AccountsApiControllerTest {
 
 	}
 
-	@After
-	public void tearDown() {
+	@After public void tearDown() {
 		// Add clean up code here
 	}
 

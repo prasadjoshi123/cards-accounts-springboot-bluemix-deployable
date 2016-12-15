@@ -8,6 +8,7 @@ import io.swagger.annotations.*;
 import io.swagger.configuration.CloudantBinding;
 import io.swagger.model.AccountDetails;
 import io.swagger.model.AccountRepository;
+import io.swagger.utility.Utility;
 import org.ektorp.DocumentNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,16 +32,22 @@ public class ManageAccountApiController implements ManageAccountApi {
     private AccountRepository acountRepository;
     @Autowired
     CloudantBinding cloudantBinding;
+    @Autowired
+    RestTemplate restTemplate;
 
     @RequestMapping(method = RequestMethod.DELETE, value = "{accountNumber}")
     public ResponseEntity<?> deleteAccountDetails(@PathVariable String accountNumber) {
         AccountDetails accountDetails =null;
         String id=null;
         try {
+            validateAccountDetails(accountNumber);
             String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() +"/account_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
-            RestTemplate restTemplate = new RestTemplate();
+
             String accountDetailsString = restTemplate.getForObject(URL, String.class);
             id=getDocId(accountDetailsString);
+        } catch (ApiException ae) {
+            return new ResponseEntity<ApplicationError>(new ApplicationError(ae.getCode(), ae.getMessage()),
+                    HttpStatus.NOT_FOUND);
         } catch (DocumentNotFoundException ex) {
             return new ResponseEntity<ApplicationError>(
                     new ApplicationError(HttpStatus.NOT_FOUND.value(), "ID to be deleted not found"),
@@ -54,6 +61,14 @@ public class ManageAccountApiController implements ManageAccountApi {
         return new ResponseEntity<HttpStatus>(HttpStatus.OK);
 
     }
+
+    public void validateAccountDetails(String accountId) throws ApiException {
+        if (Utility.isNullOrEmpty(accountId)) {
+            throw new ApiException(405, "Invalid Account Details - Account Number Missing");
+        }
+
+    }
+
     private String getDocId(String str) throws IOException {
         String id = null;
         ObjectMapper mapper = new ObjectMapper();
