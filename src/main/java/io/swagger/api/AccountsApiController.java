@@ -25,6 +25,9 @@ import io.swagger.configuration.CloudantBinding;
 	@Autowired
 	CloudantBinding cloudantBinding;
 
+	@Autowired
+	RestTemplate restTemplate;
+
 	@RequestMapping(value = "/accounts", method = RequestMethod.POST) public ResponseEntity<?> createAccount(
 			@ApiParam(value = "The account to be created.") @RequestBody AccountDetails accountDetails) {
 		try {
@@ -51,11 +54,12 @@ import io.swagger.configuration.CloudantBinding;
 		AccountDetails accountDetails = new AccountDetails();
 		String id = null;
 		try {
+			validateGetAccountDetails(accountNumber);
 			String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() +"/account_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
-			RestTemplate restTemplate = new RestTemplate();
+
 			String accountDetailsString = restTemplate.getForObject(URL, String.class);
 			id=getDocId(accountDetailsString);
-			validateGetAccountDetails(id);
+
 			accountDetails = repository.get(id);
 		} catch (ApiException ae) {
 			return new ResponseEntity<ApplicationError>(new ApplicationError(ae.getCode(), ae.getMessage()),

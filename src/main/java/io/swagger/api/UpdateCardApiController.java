@@ -8,6 +8,7 @@ import io.swagger.model.CardDetails;
 import io.swagger.annotations.*;
 
 import io.swagger.model.CardRepository;
+import io.swagger.utility.Utility;
 import org.ektorp.DocumentNotFoundException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -26,61 +27,68 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringCodegen", date = "2016-12-02T10:00:02.459+05:30")
 
-@SpringBootApplication
-@RestController
-@RequestMapping("/update-card")
-public class UpdateCardApiController implements UpdateCardApi {
-    @Autowired
-    private CardRepository repository;
-    @Autowired
-    CloudantBinding cloudantBinding;
+@SpringBootApplication @RestController @RequestMapping("/update-card") public class UpdateCardApiController
+		implements UpdateCardApi {
+	@Autowired private CardRepository repository;
+	@Autowired CloudantBinding cloudantBinding;
+	@Autowired RestTemplate restTemplate;
 
-    @RequestMapping(method = RequestMethod.PUT, value = "{cardNumber}", consumes = "application/json")
-    public ResponseEntity<?> updateCardDetails(@RequestBody CardDetails cardD, @PathVariable String cardNumber) {
-        CardDetails cardDetails = null;
-        String stringToParse = null;
-        try {
-            String URL ="http://"+cloudantBinding.getHost()+":"+cloudantBinding.getPort()+"/card_db/_design/CardDetails/_search/search_card_details?q=cardNumber:"+cardNumber;
-            RestTemplate restTemplate = new RestTemplate();
-            stringToParse = restTemplate.getForObject(URL, String.class);
-            String id=getDocId(stringToParse);
-            cardDetails=repository.get(id);
-        } catch (DocumentNotFoundException ex) {
-            return new ResponseEntity<ApplicationError>(
-                    new ApplicationError(HttpStatus.NOT_FOUND.value(), "Document to be updated not found"),
-                    HttpStatus.NOT_FOUND);
-        } catch (IOException ex) {
-            return new ResponseEntity<ApplicationError>(
-                    new ApplicationError(HttpStatus.NOT_FOUND.value(), "document to be updated not found"),
-                    HttpStatus.NOT_FOUND);
-        }
-        cardDetails.setCardNumber(cardD.getCardNumber());
-        cardDetails.setCardApplyMode(cardD.getCardApplyMode());
-        cardDetails.setCardStatus(cardD.getCardStatus());
-        cardDetails.setCardType(cardD.getCardType());
-        cardDetails.setCustId(cardD.getCustId());
-        cardDetails.setExpiryDate(cardD.getExpiryDate());
-        cardDetails.setStartDate(cardD.getStartDate());
-        repository.update(cardDetails);
-        return new ResponseEntity<CardDetails>(cardDetails, HttpStatus.OK);
-    }
+	@RequestMapping(method = RequestMethod.PUT, value = "{cardNumber}", consumes = "application/json") public ResponseEntity<?> updateCardDetails(
+			@RequestBody CardDetails cardD, @PathVariable String cardNumber) {
+		CardDetails cardDetails = null;
+		String stringToParse = null;
+		try {
+			validateCardDetails(cardNumber);
+			String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort()
+					+ "/card_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
 
-    private String getDocId(String str) throws IOException {
-        String id = null;
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(str);
-        JsonNode rowNode = root.path("rows");
-        if (rowNode.isArray()) {
-            // If this node an Arrray?
-        }
-        for (JsonNode node : rowNode) {
-            id = node.path("id").asText();
+			stringToParse = restTemplate.getForObject(URL, String.class);
+			String id = getDocId(stringToParse);
+			cardDetails = repository.get(id);
+		} catch (ApiException ae) {
+			return new ResponseEntity<ApplicationError>(new ApplicationError(ae.getCode(), ae.getMessage()),
+					HttpStatus.NOT_FOUND);
+		} catch (DocumentNotFoundException ex) {
+			return new ResponseEntity<ApplicationError>(
+					new ApplicationError(HttpStatus.NOT_FOUND.value(), "Document to be updated not found"),
+					HttpStatus.NOT_FOUND);
+		} catch (IOException ex) {
+			return new ResponseEntity<ApplicationError>(
+					new ApplicationError(HttpStatus.NOT_FOUND.value(), "document to be updated not found"),
+					HttpStatus.NOT_FOUND);
+		}
+		cardDetails.setCardNumber(cardD.getCardNumber());
+		cardDetails.setCardApplyMode(cardD.getCardApplyMode());
+		cardDetails.setCardStatus(cardD.getCardStatus());
+		cardDetails.setCardType(cardD.getCardType());
+		cardDetails.setCustId(cardD.getCustId());
+		cardDetails.setExpiryDate(cardD.getExpiryDate());
+		cardDetails.setStartDate(cardD.getStartDate());
+		repository.update(cardDetails);
+		return new ResponseEntity<CardDetails>(cardDetails, HttpStatus.OK);
+	}
 
-        }
-        return id;
-    }
+	private String getDocId(String str) throws IOException {
+		String id = null;
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode root = mapper.readTree(str);
+		JsonNode rowNode = root.path("rows");
+		if (rowNode.isArray()) {
+			// If this node an Arrray?
+		}
+		for (JsonNode node : rowNode) {
+			id = node.path("id").asText();
+
+		}
+		return id;
+	}
+
+	public void validateCardDetails(String cardNumber) throws ApiException {
+		if (Utility.isNullOrEmpty(cardNumber)) {
+			throw new ApiException(405, "Invalid Card Details - Card Number Missing");
+		}
+	}
 
 }
