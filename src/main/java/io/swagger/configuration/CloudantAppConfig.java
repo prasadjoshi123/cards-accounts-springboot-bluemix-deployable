@@ -19,8 +19,7 @@ public class CloudantAppConfig {
 
 	@Bean
 	public CouchDbConnector couchDbConnector(CouchDbInstance couchDbInstance) {
-		CouchDbConnector connector = new StdCouchDbConnector("account_db", couchDbInstance);
-		//CouchDbConnector connector = new StdCouchDbConnector("card_db", couchDbInstance);
+		CouchDbConnector connector = new StdCouchDbConnector("cards_accounts_db", couchDbInstance);
 		connector.createDatabaseIfNotExists();
 		return connector;
 	}
