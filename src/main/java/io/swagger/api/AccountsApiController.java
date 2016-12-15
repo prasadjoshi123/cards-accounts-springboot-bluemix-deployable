@@ -21,7 +21,9 @@ import io.swagger.configuration.CloudantBinding;
 
 @RestController public class AccountsApiController implements AccountsApi {
 
-	@Autowired private AccountRepository repository;
+	@Autowired
+	private AccountRepository repository;
+
 	@Autowired
 	CloudantBinding cloudantBinding;
 
