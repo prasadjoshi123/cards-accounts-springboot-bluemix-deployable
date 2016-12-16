@@ -14,18 +14,16 @@ https://hub.docker.com/r/ibmcom/cloudant-developer/
 7. In intelliJ Terminal run command "java -jar target/swagger-spring-1.0.0.jar"<BR>
 8. Open "http://localhost:8080/dashboard.html" and check if "cards_accounts_db" is created with 0 records<BR>
 9. Created below indices in "cards_accounts_db"<BR>
+   Index name: search_card_details<BR>
+   Save to Design Document: CardDetails<BR>
+   Search Index Function:<BR>
 
-    Index name- search_card_details
-    Save to Design Document- CardDetails
-    Search Index Function-
-
-    function(doc){
+   function(doc){
       index("default", doc._id);
 
         if(doc.custId ){
         index("custId", doc.custId , {"facet": true, "store": true});
       }
-
       if(doc.cardNumber){
         index("cardNumber", doc.cardNumber, {"facet": true, "store": true});
       }
@@ -33,26 +31,30 @@ https://hub.docker.com/r/ibmcom/cloudant-developer/
         index("class", doc['class'], {"facet": true, "store": true});
       }
     }
-
-    Index name : search_account_details
-    Save to Design Document: AccountDetails
-    Search index function:
+<BR>
+    Index name: search_account_details<BR>
+    Save to Design Document: AccountDetails<BR>
+    Search index function:<BR>
 
     function(doc){
       index("default", doc._id);
         if(doc.accountNumber){
         index("accountNumber", doc.accountNumber, {"facet": true, "store": true});
       }
-
       if (doc['class']){
         index("class", doc['class'], {"facet": true, "store": true});
       }
     }
+<BR>
+#APIs Exposed by CARDS and ACCOUNTS micro services.
 
-#Postman or RestClient can be used for testing below operations/APIs supported by CARDS and ACCOUNTS micro services.
+http://localhost:7070/card-accounts/card(Create Card , Method-POST, Headers-Content-Type:application/json)<BR>
+http://localhost:7070/card-accounts/update-card/{cardNumber}( Update Card, Mthod=PUT, Headers-Content=Type:application/json)<BR>
+http://localhost:7070/card-accounts/fetch-cards/{cardNumber}(Retrieve Card by Card Number, Method-GET)<BR>
+http://localhost:7070/card-accounts/fetch-card-details/{custId}(Retrieve Card by Cust ID, Method-GET)<BR>
+http://localhost:7070/card-accounts/card(Retrieve all Cards, Method-GET)<BR>
+http://localhost:7070/card-accounts/manage-card/(Delete Card, Method-DELETE)<BR>
 
-Create Card: http://localhost:7070/card-accounts/card(Method-POST, Headers- Content-Type:application/json)<BR>
-Update Card: http://localhost:7070/card-accounts/update-card/{cardNumber}(Method=PUT, Headers-Content=Type:application/json)<BR>
 Payload for Create and Update Card:<BR>
 
     {
@@ -65,12 +67,11 @@ Payload for Create and Update Card:<BR>
       "cardApplyMode": "mobile"
     }
 
-Retrieve Card by Card Number: http://localhost:7070/card-accounts/fetch-cards/{cardNumber}(Method-GET)<BR>
-Retrieve Card by Cust ID: http://localhost:7070/card-accounts/fetch-card-details/{custId}(Method-GET)<BR>
-Retrieve all Cards: http://localhost:7070/card-accounts/card(Method-GET)<BR>
-Delete Card: http://localhost:7070/card-accounts/manage-card/(Method-DELETE)<BR>
-Create Account:http://localhost:7070/card-accounts/accounts(Method-POST, Headers-Content-Type:application/json)<BR>
-Update Account Details : http://localhost:7070/card-accounts/update-account/{accountNumber}(Method-PUT, Headers-Content-Type:application/json)<BR>
+http://localhost:7070/card-accounts/accounts(Create Account, Method-POST, Headers-Content-Type:application/json)<BR>
+http://localhost:7070/card-accounts/update-account/{accountNumber}(Update Account, Method-PUT, Headers-Content-Type:application/json)<BR>
+http://localhost:7070/card-accounts/accounts/{accountNumber}(Fetch Account Details by Account Number, Method-GET)<BR>
+http://localhost:7070/card-accounts/manage-account/{accountNumber}(Delete Account, Method-DELETE)<BR>
+
 Payload for Create and Update Account:<BR>
 
     {
@@ -84,10 +85,7 @@ Payload for Create and Update Account:<BR>
       "mobileNumber": 9899876285
     }
 
-Fetch Account Details by Account Number: http://localhost:7070/card-accounts/accounts/{accountNumber}(Method-GET)<BR>
-Delete Account Details by Account Number: http://localhost:7070/card-accounts/manage-account/{accountNumber}(Method-DELETE)<BR>
-
-# Deploy on IBM Bluemix Cloud Foundry App and Docker Container
+# Deployment on IBM Bluemix Cloud Foundry App and Docker Container
 
 Click below to deploy to your bluemix space
 [![Deploy to Bluemix](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy)
