@@ -35,7 +35,7 @@ public class CardDetails   {
     this.dbRecordType = dbRecordType;
   }
 
-  @JsonProperty("dbRecordType ")
+  @JsonProperty("dbRecordType")
   private String dbRecordType  = "cards";
 
   @JsonProperty("cardNumber")
