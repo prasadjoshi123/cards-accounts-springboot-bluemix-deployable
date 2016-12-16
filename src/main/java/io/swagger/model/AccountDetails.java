@@ -20,8 +20,8 @@ public class AccountDetails   {
   @org.codehaus.jackson.annotate.JsonProperty("_rev")
   private String revision;
 
-  @JsonProperty("dbRecordType ")
-  private String dbRecordType  = "accounts";
+  @JsonProperty("dbRecordType")
+  private String dbRecordType = "accounts";
 
   @JsonProperty("userName")
   private String userName = null;
