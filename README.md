@@ -46,7 +46,7 @@ https://hub.docker.com/r/ibmcom/cloudant-developer/
       }
     }
 <BR>
-#APIs Exposed by CARDS and ACCOUNTS micro services.
+#API Endpoints and Payload
 
 http://localhost:7070/card-accounts/card(Create Card , Method-POST, Headers-Content-Type:application/json)<BR>
 http://localhost:7070/card-accounts/update-card/{cardNumber}( Update Card, Mthod=PUT, Headers-Content=Type:application/json)<BR>
