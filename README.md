@@ -10,47 +10,68 @@ https://hub.docker.com/r/ibmcom/cloudant-developer/<BR>
 7. Make sure cloudant is running in your docker container on local<BR>
 8. In intelliJ Terminal run command "java -jar target/swagger-spring-1.0.0.jar"<BR>
 9. Open "http://localhost:8080/dashboard.html" and check if "cards_accounts_db" is created with 0 records<BR>
-10. Create below search indices on "cards_accounts_db"<BR>
-</P>
-   Index name: search_card_details<BR>
-   Save to Design Document: CardDetails<BR>
-   Search Index Function:<BR>
-
-   function(doc){
-      index("default", doc._id);
-        if(doc.custId ){
-        index("custId", doc.custId , {"facet": true, "store": true});
-      }
-      if(doc.cardNumber){
-        index("cardNumber", doc.cardNumber, {"facet": true, "store": true});
-      }
-      if (doc['class']){
-        index("class", doc['class'], {"facet": true, "store": true});
-      }
-    }
-</P>
-    Index name: search_account_details<BR>
-    Save to Design Document: AccountDetails<BR>
-    Search index function:<BR>
-
-    function(doc){
-      index("default", doc._id);
-        if(doc.accountNumber){
-        index("accountNumber", doc.accountNumber, {"facet": true, "store": true});
-      }
-      if (doc['class']){
-        index("class", doc['class'], {"facet": true, "store": true});
-      }
-    }
+10. Create below search indices on "cards_accounts_db" database <BR>
 <BR>
+    i)  Index name: search_card_details<BR>
+        Save to Design Document: CardDetails<BR>
+        Search Index Function:<BR>
 
-11. API Endpoints and Payload<BR>
+        function(doc){
+            index("default", doc._id);
+            if(doc.custId ){
+            index("custId", doc.custId , {"facet": true, "store": true});
+            }
+            if(doc.cardNumber){
+            index("cardNumber", doc.cardNumber, {"facet": true, "store": true});
+            }
+            if (doc['class']){
+            index("class", doc['class'], {"facet": true, "store": true});
+            }
+        }
+
+<BR>
+    ii) Index name: search_account_details<BR>
+        Save to Design Document: AccountDetails<BR>
+        Search index function:<BR>
+
+        function(doc)
+            {
+              index("default", doc._id);
+                if(doc.accountNumber){
+                index("accountNumber", doc.accountNumber, {"facet": true, "store": true});
+                }
+                if (doc['class']){
+                index("class", doc['class'], {"facet": true, "store": true});
+                }
+            }
+<BR>
+11. Create views on on "cards_accounts_db" database
+
+    i)  _design  : CardDetails<BR>
+         Index name : cards_view<BR>
+
+         function (doc){
+                     if(doc.dbRecordType=="cards"){
+                     emit(doc._id,1)
+                     }
+         }
+
+    ii) _design  : AccountDetails<BR>
+        Index name : accounts_view<BR>
+
+        function (doc){
+                   if(doc.dbRecordType=="accounts"){
+                   emit(doc._id,1)
+                   }
+        }
+
+12. API Endpoints and Payload<BR>
 
 http://localhost:7070/card-accounts/card(Create Card, POST, Content-Type:application/json)<BR>
 http://localhost:7070/card-accounts/update-card/{cardNumber}(Update Card, PUT, Content-Type:application/json)<BR>
-http://localhost:7070/card-accounts/fetch-cards/{cardNumber}(Retrieve Card by Card Number, GET)<BR>
-http://localhost:7070/card-accounts/fetch-card-details/{custId}(Retrieve Card by Cust ID, GET)<BR>
-http://localhost:7070/card-accounts/card(Retrieve all Cards, GET)<BR>
+http://localhost:7070/card-accounts/fetch-cards/{cardNumber}(Fetch Card by Card Number, GET)<BR>
+http://localhost:7070/card-accounts/fetch-card-details/{custId}(Fetch Card by Cust ID, GET)<BR>
+http://localhost:7070/card-accounts/card(Fetch all Cards, GET)<BR>
 http://localhost:7070/card-accounts/manage-card/(Delete Card, DELETE)<BR>
 
 Payload for Create and Update Card:<BR>
@@ -67,7 +88,8 @@ Payload for Create and Update Card:<BR>
 
 http://localhost:7070/card-accounts/accounts(Create Account, POST, Content-Type:application/json)<BR>
 http://localhost:7070/card-accounts/update-account/{accountNumber}(Update Account, PUT, Content-Type:application/json)<BR>
-http://localhost:7070/card-accounts/accounts/{accountNumber}(Fetch Account Details by Account Number, GET)<BR>
+http://localhost:7070/card-accounts/accounts(Fetch all Account Details by Account Number, GET)<BR>
+http://localhost:7070/card-accounts/accounts/{accountNumber}(Fetch Account by Account Number, GET)<BR>
 http://localhost:7070/card-accounts/manage-account/{accountNumber}(Delete Account, DELETE)<BR>
 
 Payload for Create and Update Account:<BR>

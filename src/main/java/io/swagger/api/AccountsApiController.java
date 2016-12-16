@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import io.swagger.configuration.CloudantBinding;
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringCodegen", date = "2016-11-01T18:09:28.587+05:30")
@@ -57,11 +58,9 @@ import io.swagger.configuration.CloudantBinding;
 		String id = null;
 		try {
 			validateGetAccountDetails(accountNumber);
-			//String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_account_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
 			String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
 			String accountDetailsString = restTemplate.getForObject(URL, String.class);
 			id=getDocId(accountDetailsString);
-
 			accountDetails = repository.get(id);
 		} catch (ApiException ae) {
 			return new ResponseEntity<ApplicationError>(new ApplicationError(ae.getCode(), ae.getMessage()),
@@ -79,11 +78,17 @@ import io.swagger.configuration.CloudantBinding;
 	}
 
 	@RequestMapping(value = "/accounts", method = RequestMethod.GET) public ResponseEntity<?> getAllAccounts() {
-		List<AccountDetails> allAccounts = repository.getAll();
-		if (allAccounts == null || allAccounts.isEmpty())
+
+		String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/AccountDetails/_view/accounts_view?include_docs=true";
+		RestTemplate restTemplate = new RestTemplate();
+		String accounts = restTemplate.getForObject(URL, String.class);
+
+		//List<AccountDetails> allAccounts = new ArrayList<AccountDetails>();
+		/*repository.getAll();*/
+		if (accounts == null || accounts.isEmpty())
 			return new ResponseEntity<ApplicationError>(
 					new ApplicationError(HttpStatus.NOT_FOUND.value(), "no documents found"), HttpStatus.NOT_FOUND);
-		return new ResponseEntity<List<AccountDetails>>(allAccounts, HttpStatus.OK);
+		return new ResponseEntity<String>(accounts, HttpStatus.OK);
 
 	}
 

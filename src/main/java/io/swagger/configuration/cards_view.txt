@@ -1,0 +1,10 @@
+_design  : CardDetails
+
+Index name : cards_view
+
+
+function (doc) 
+{
+    if(doc.dbRecordType=="cards"){
+  emit(doc._id,1)}
+}

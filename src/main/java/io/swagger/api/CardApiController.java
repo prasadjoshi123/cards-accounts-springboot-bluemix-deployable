@@ -1,5 +1,6 @@
 package io.swagger.api;
 
+import io.swagger.configuration.CloudantBinding;
 import io.swagger.model.*;
 
 import io.swagger.annotations.*;
@@ -18,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+
+import static org.apache.catalina.startup.ClassLoaderFactory.RepositoryType.URL;
 
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringCodegen", date = "2016-11-01T18:09:28.587+05:30")
@@ -32,6 +36,8 @@ public class CardApiController implements CardApi {
     @Autowired
     private CardRepository repository;
 
+    @Autowired
+    CloudantBinding cloudantBinding;
 
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<?> createCard(@ApiParam(value = "The card to be created."  ) @RequestBody CardDetails cardDetails) {
@@ -54,13 +60,16 @@ public class CardApiController implements CardApi {
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> getAllCards() {
 
-        List<CardDetails> allCards = repository.getAll();
-        if (allCards == null || allCards.isEmpty())
-            return new ResponseEntity<ApplicationError>(
-                    new ApplicationError(HttpStatus.NOT_FOUND.value(), "no documents found"), HttpStatus.NOT_FOUND);
-        return new ResponseEntity<List<CardDetails>>(allCards, HttpStatus.OK);
-    }
+        RestTemplate restTemplate = new RestTemplate();
+        String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_view/cards_view?include_docs=true";
+        String cards = restTemplate.getForObject(URL, String.class);
 
+        if (cards == null || cards.isEmpty())
+            return new ResponseEntity<ApplicationError>(
+                    new ApplicationError(HttpStatus.NOT_FOUND.value(), "no card documents found"), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<String>(cards, HttpStatus.OK);
+
+    }
     public void validateCreateCard(CardDetails cardDetails) throws ApiException {
         if (cardDetails.getCardNumber() == 0) {
             throw new ApiException(405, "Invalid Card Details - Card Number Missing");

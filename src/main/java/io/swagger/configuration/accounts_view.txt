@@ -1,0 +1,10 @@
+_design  : AccountDetails
+
+Index name : accounts_view
+
+
+function (doc) 
+{
+    if(doc.dbRecordType=="accounts"){
+  emit(doc._id,1)}
+}
