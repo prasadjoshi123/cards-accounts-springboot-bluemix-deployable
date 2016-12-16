@@ -10,7 +10,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * CardDetails
  */
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringCodegen", date = "2016-11-01T18:09:28.587+05:30")
-@JsonIgnoreProperties({"id", "revision", "dbRecordType"})
+@JsonIgnoreProperties({"id", "revision"})
 public class CardDetails   {
 
   @JsonProperty("_id")
