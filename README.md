@@ -1,11 +1,11 @@
-Cards and Accounts Spring Boot Micro Services:
+#Cards and Accounts Spring Boot Micro Services:
 
 #Prerequisite
 Make sure IBM  Cloudant Docker image is available on your local if not please follow below link for the same.
 https://hub.docker.com/r/ibmcom/cloudant-developer/
 
 #Configuration
-1. Create new project in IntelliJ by checking out code from git repository with address -https://github.com/vajadhav/account-springboot
+1. Create new project in IntelliJ by checking out code from git repository with address -https://github.com/vajadhav/swagger-springboot-cards-with-search-indices.git
 2. Configure project as mvn
 3. Resolve libraries dependency
 4. Run - mvn clean install -U -->command on Terminal inside Intellij
