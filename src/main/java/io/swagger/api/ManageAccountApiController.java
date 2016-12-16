@@ -41,7 +41,7 @@ public class ManageAccountApiController implements ManageAccountApi {
         String id=null;
         try {
             validateAccountDetails(accountNumber);
-            String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() +"/account_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
+            String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() +"/cards_accounts_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
 
             String accountDetailsString = restTemplate.getForObject(URL, String.class);
             id=getDocId(accountDetailsString);

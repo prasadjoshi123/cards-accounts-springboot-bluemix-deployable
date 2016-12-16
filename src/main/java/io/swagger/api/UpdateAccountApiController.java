@@ -37,7 +37,7 @@ import java.util.List;
 		String id = null;
 		try {
 			String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort()
-					+ "/account_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"
+					+ "/cards_accounts_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"
 					+ accountNumber;
 			validateAccountDetails(accountNumber);
 			String accountDetailsString = restTemplate.getForObject(URL, String.class);
