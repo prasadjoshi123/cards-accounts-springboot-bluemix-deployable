@@ -7,22 +7,7 @@ Search index function:
 
 function(doc){
   index("default", doc._id);
-  if(doc.userName ){
-    index("userName", doc.userName , {"facet": true, "store": true});
-  }
-    if(doc.customerId ){
-    index("customerId", doc.customerId , {"facet": true, "store": true});
-  }
-  if(doc.accountType ){
-    index("accountType", doc.accountType , {"facet": true, "store": true});
-  }
-  if (doc.accountStatus){
-    index("accountStatus", doc.accountStatus , {"store": true});
-  }
-  if(doc.address){
-    index("address", doc.address, {"facet": true, "store": true});
-  }
-    if(doc.accountNumber){
+     if(doc.accountNumber){
     index("accountNumber", doc.accountNumber, {"facet": true, "store": true});
   }
   if(doc.mobileNumber){
