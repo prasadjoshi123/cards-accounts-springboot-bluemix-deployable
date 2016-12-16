@@ -1,10 +1,10 @@
 #Cards and Accounts Spring Boot Micro Services:
 
-#Prerequisite
+Prerequisite
 Make sure IBM  Cloudant Docker image is available on your local if not please follow below link for the same.
 https://hub.docker.com/r/ibmcom/cloudant-developer/
 
-#Configuration
+Configuration
 1. Create new project in IntelliJ by checking out code from git repository with address -https://github.com/vajadhav/swagger-springboot-cards-with-search-indices.git
 2. Configure project as mvn
 3. Resolve libraries dependency
@@ -49,82 +49,40 @@ https://hub.docker.com/r/ibmcom/cloudant-developer/
       }
     }
 
-#CRUD operations for CARDS can be tested in Rest Client / Postman with payload
+Postman or RestClient can be used for testing below operations/APIs supported by CARDS and ACCOUNTS micro services.
 
-API - Create Card
-Headers- Content-Type:application/json
-Method - POST
-URI-
-Payload -
-{
-  "cardNumber": 12398760,
-  "cardType": "Debit",
-  "custId": 10010,
-  "cardStatus": "Active",
-  "startDate": "12/12/2016",
-  "expiryDate": "12/12/2021",
-  "cardApplyMode": "mobile"
-}
-API - Retrieve Card by Card Number
-Method - GET
-URI - http://localhost:7070/card-accounts/fetch-cards/{cardNumber}
-Payload - NA
+Create Card: http://localhost:7070/card-accounts/card(Method-POST, Headers- Content-Type:application/json)
+Update Card: http://localhost:7070/card-accounts/update-card/{cardNumber}(Method=PUT, Headers-Content=Type:application/json)
+Payload for Create and Update Card:
+    {
+      "cardNumber": 12398760,
+      "cardType": "Debit",
+      "custId": 10010,
+      "cardStatus": "Active",
+      "startDate": "12/12/2016",
+      "expiryDate": "12/12/2021",
+      "cardApplyMode": "mobile"
+    }
+Retrieve Card by Card Number: http://localhost:7070/card-accounts/fetch-cards/{cardNumber}(Method-GET)
+Retrieve Card by Cust ID: http://localhost:7070/card-accounts/fetch-card-details/{custId}(Method-GET)
+Retrieve all Cards: http://localhost:7070/card-accounts/card(Method-GET)
+Delete Card: http://localhost:7070/card-accounts/manage-card/(Method-DELETE)
+Create Account:http://localhost:7070/card-accounts/accounts(Method-POST, Headers- Content-Type:application/json)
+Update Account Details : http://localhost:7070/card-accounts/update-account/{accountNumber}(Method-PUT, Headers- Content-Type:application/json)
+Payload for Create and Update Account:
+    {
+      "userName": "Seema Kulkarni",
+      "customerId": 890109,
+      "accountType": "Saving",
+      "accountStatus": "Active",
+      "accountBalance": 123.34,
+      "address": "Pune",
+      "accountNumber": 5456707,
+      "mobileNumber": 9899876285
+    }
+Fetch Account Details by Account Number: http://localhost:7070/card-accounts/accounts/{accountNumber}(Method - GET)
+Delete Account Details by Account Number: http://localhost:7070/card-accounts/manage-account/{accountNumber}(Method - DELETE)
 
-API - Retrieve Card by Customer ID
-Method - GET
-http://localhost:7070/card-accounts/fetch-card-details/{custId}
-Payload - NA
-
-API - Retrieve All Cards
-Method - GET
-URI- http://localhost:7070/card-accounts/card
-Payload - NA
-
-#CRUD operations for ACCOUNTS can be tested in Rest Client / Postman with payload
-
-Create Account
-Headers- Content-Type:application/json
-Method - POST
-URI-http://localhost:7070/card-accounts/accounts
-Payload -
-{
-  "userName": "Seema Kulkarni",
-  "customerId": 890109,
-  "accountType": "Saving",
-  "accountStatus": "Active",
-  "accountBalance": 123.34,
-  "address": "Pune",
-  "accountNumber": 5456707,
-  "mobileNumber": 9899876285
-}
-
-
-Update  Account Details by Account Number
-Headers- Content-Type:application/json
-Method - PUT
-http://localhost:7070/card-accounts/update-account/{accountNumber}
-Payload -
-{
-  "userName": "Madhav Bhandari",
-  "customerId": 890109,
-  "accountType": "Saving",
-  "accountStatus": "Active",
-  "accountBalance": 1234556.34,
-  "address": "Pune",
-  "accountNumber": 5456707,
-  "mobileNumber": 9899876285
-}
-
-Fetch Account Details by Account Number
-Method - GET
-http://localhost:7070/card-accounts/accounts/{accountNumber}
-Payload -NA
-
-Delete Account Details by Account Number
-Method - DELETE
-http://localhost:7070/card-accounts/manage-account/{accountNumber}
-Payload -NA
-
-#Deploy Cards and Accounts Spring Boot Micro Services on IBM Bluemix as Cloud Foundry App and Docker Container App:
+Deploy Cards and Accounts Spring Boot Micro Services on IBM Bluemix as Cloud Foundry App and Docker Container App:
 Click below to deploy to your bluemix space
 [![Deploy to Bluemix](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy)
