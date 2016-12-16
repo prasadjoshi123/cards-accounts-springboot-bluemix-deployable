@@ -26,6 +26,6 @@ public interface ManageCardApi {
         @ApiResponse(code = 404, message = "Card does not exist.", response = Void.class) })
     @RequestMapping(value = "/manage-card/{cardNumber}",
         method = RequestMethod.DELETE)
-    ResponseEntity<?> deleteCardDetails(@PathVariable String id);
+    ResponseEntity<?> deleteCardDetails(@PathVariable String cardNumber);
 
 }

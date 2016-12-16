@@ -25,7 +25,6 @@ import java.util.List;
 
 import static javax.servlet.SessionTrackingMode.URL;
 
-//import com.cloudant.client.api.CloudantClient;
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringCodegen", date = "2016-11-01T18:09:28.587+05:30")
 
 @SpringBootApplication
@@ -42,7 +41,6 @@ public class FetchCardDetailsApiController implements FetchCardDetailsApi{
    public ResponseEntity<?> fetchCardsDetailsById(@PathVariable String cardNumber) {
        CardDetails cardDetails=new CardDetails();
        try {
-           //String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/card_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
            String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
            RestTemplate restTemplate = new RestTemplate();
            String accountDetailsString = restTemplate.getForObject(URL, String.class);

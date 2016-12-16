@@ -40,7 +40,6 @@ public class FetchCardsApiController implements FetchCardsApi {
     public ResponseEntity<?> fetchCardsForCustomer(@PathVariable Integer custId) {
         CardDetails cardDetails=new CardDetails();
         try {
-            //String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/card_db/_design/CardDetails/_search/search_card_details?q=custId:" + custId;
             String URL = "http://"  + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_search/search_card_details?q=custId:" + custId;
             RestTemplate restTemplate = new RestTemplate();
             String accountDetailsString = restTemplate.getForObject(URL, String.class);

@@ -26,5 +26,5 @@ public interface UpdateCardApi {
         @ApiResponse(code = 404, message = "Card does not exist.", response = Void.class) })
     @RequestMapping(value = "/update-card/{cardNumber}",
         method = RequestMethod.PUT)
-    ResponseEntity<?> updateCardDetails(@RequestBody CardDetails cardDetails, @PathVariable String id);
+    ResponseEntity<?> updateCardDetails(@RequestBody CardDetails cardDetails, @PathVariable String cardNumber);
 }
