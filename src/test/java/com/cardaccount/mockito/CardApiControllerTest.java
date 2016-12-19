@@ -2,6 +2,7 @@ package com.cardaccount.mockito;
 
 import io.swagger.api.ApplicationError;
 import io.swagger.api.CardApiController;
+import io.swagger.configuration.CloudantBinding;
 import io.swagger.model.AccountDetails;
 import io.swagger.model.CardDetails;
 import io.swagger.model.CardRepository;
@@ -16,10 +17,13 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
@@ -38,6 +42,14 @@ import static org.mockito.Mockito.when;
 
 	// The class whose invocations need to be stubbed
 	@Mock private CardRepository repository;
+
+	// Setting up mocked rest template services
+	private final Integer validPortNumber = 8080;
+	private final String validHostName = "http://ibm.finkit";
+
+	@Mock RestTemplate restTemplate;
+
+	@Mock CloudantBinding cloudantBinding;
 
 	// The method to initialize the mock objects
 	@Before public void setUp() {
@@ -59,6 +71,11 @@ import static org.mockito.Mockito.when;
 		 */
 		when(repository.get(validCardNumber.toString())).thenReturn(validCardDetails);
 
+		when(restTemplate.getForObject(anyString(), eq(String.class))).thenReturn(String.valueOf(validCardNumber));
+
+		when(cloudantBinding.getHost()).thenReturn(validHostName);
+		when(cloudantBinding.getPort()).thenReturn(validPortNumber);
+
 		/** Do nothing when the method is called,usually used for a method
 		 that returns void **/
 		Mockito.doNothing().when(repository).add(validCardDetails);
@@ -70,30 +87,15 @@ import static org.mockito.Mockito.when;
 		ResponseEntity response = cardApiController.getAllCards();
 
 		int cardsListSize = 0;
+		String cardDetailsResponse=null;
 		if (response.getBody() != null) {
-			List<CardDetails> cardDetailsResponse = (List<CardDetails>)response.getBody();
-			if (cardDetailsResponse != null && !cardDetailsResponse.isEmpty()) {
-				cardsListSize = cardDetailsResponse.size();
-			}
+			cardDetailsResponse = (String)response.getBody();
+
 		}
 
 		Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-		Assert.assertEquals(allCards.size(), cardsListSize);
+		Assert.assertEquals(String.valueOf(validCardNumber), cardDetailsResponse);
 
-	}
-
-	@Test public void testGetAllAccountsForEmptyResults() {
-		when(repository.getAll()).thenReturn(null);
-
-		ResponseEntity response = cardApiController.getAllCards();
-
-		int cardsListSize = 100;
-		if (response.getBody() instanceof ApplicationError) {
-			cardsListSize = 0;
-		}
-
-		Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-		Assert.assertEquals(0, cardsListSize);
 
 	}
 
