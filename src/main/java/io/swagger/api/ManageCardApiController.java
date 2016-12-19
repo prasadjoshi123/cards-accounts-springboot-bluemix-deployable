@@ -9,6 +9,8 @@ import io.swagger.model.CardDetails;
 import io.swagger.model.CardRepository;
 import io.swagger.utility.Utility;
 import org.ektorp.DocumentNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
@@ -27,16 +29,19 @@ import java.io.IOException;
 import java.util.List;
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringCodegen", date = "2016-11-01T18:09:28.587+05:30")
-
-@SpringBootApplication @RestController @RequestMapping("/manage-card") public class ManageCardApiController
+@SpringBootApplication
+@RestController
+@RequestMapping("/manage-card")
+public class ManageCardApiController
 		implements ManageCardApi {
-
+	final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired private CardRepository repository;
 	@Autowired CloudantBinding cloudantBinding;
 	@Autowired RestTemplate restTemplate;
 
 	@RequestMapping(method = RequestMethod.DELETE, value = "{cardNumber}") public ResponseEntity<?> deleteCardDetails(
 			@PathVariable String cardNumber) {
+		logger.info("Deleting Card with "+cardNumber+"...");
 		CardDetails cardDetails = null;
 		String stringToParse = null;
 		try {
@@ -51,13 +56,14 @@ import java.util.List;
 					HttpStatus.NOT_FOUND);
 		} catch (DocumentNotFoundException ex) {
 			return new ResponseEntity<ApplicationError>(
-					new ApplicationError(HttpStatus.NOT_FOUND.value(), "document to be Deleted not found"),
+					new ApplicationError(HttpStatus.NOT_FOUND.value(), "Card Number to be deleted not found."),
 					HttpStatus.NOT_FOUND);
 		} catch (IOException ex) {
 			return new ResponseEntity<ApplicationError>(
-					new ApplicationError(HttpStatus.NOT_FOUND.value(), "document to be Deleted not found"),
+					new ApplicationError(HttpStatus.NOT_FOUND.value(), "Card Number to be deletedd not found."),
 					HttpStatus.NOT_FOUND);
 		}
+		logger.info("Deleted Card  with "+cardNumber+" successfully.");
 		return new ResponseEntity<HttpStatus>(HttpStatus.OK);
 	}
 

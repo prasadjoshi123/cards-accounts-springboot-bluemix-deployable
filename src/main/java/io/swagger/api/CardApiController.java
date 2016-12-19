@@ -7,6 +7,8 @@ import io.swagger.annotations.*;
 
 import io.swagger.utility.Utility;
 import org.ektorp.UpdateConflictException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
@@ -27,12 +29,11 @@ import static org.apache.catalina.startup.ClassLoaderFactory.RepositoryType.URL;
 
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringCodegen", date = "2016-11-01T18:09:28.587+05:30")
-
 @SpringBootApplication
 @RestController
 @RequestMapping("/card")
 public class CardApiController implements CardApi {
-
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private CardRepository repository;
 
@@ -41,8 +42,9 @@ public class CardApiController implements CardApi {
 
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<?> createCard(@ApiParam(value = "The card to be created."  ) @RequestBody CardDetails cardDetails) {
+        logger.info("Creating New Card...");
+
         try {
-            System.out.println("................."+cardDetails.getCardNumber());
             validateCreateCard(cardDetails);
             repository.add(cardDetails);
 
@@ -51,22 +53,24 @@ public class CardApiController implements CardApi {
                     HttpStatus.BAD_REQUEST);
         } catch (UpdateConflictException ex) {
             return new ResponseEntity<ApplicationError>(new ApplicationError(HttpStatus.BAD_REQUEST.value(),
-                    "update conflicted, add was aborted. Please check your payload"), HttpStatus.BAD_REQUEST);
+                    "Update conflicted, add was aborted. Please check your payload"), HttpStatus.BAD_REQUEST);
         }
+        logger.info("Card Created Successfully.");
         return new ResponseEntity<CardDetails>(cardDetails,HttpStatus.OK);
     }
 
 
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> getAllCards() {
-
+        logger.info("Retriving All Cards...");
         RestTemplate restTemplate = new RestTemplate();
         String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_view/cards_view?include_docs=true";
         String cards = restTemplate.getForObject(URL, String.class);
 
         if (cards == null || cards.isEmpty())
             return new ResponseEntity<ApplicationError>(
-                    new ApplicationError(HttpStatus.NOT_FOUND.value(), "no card documents found"), HttpStatus.NOT_FOUND);
+                    new ApplicationError(HttpStatus.NOT_FOUND.value(), "No card documents found."), HttpStatus.NOT_FOUND);
+        logger.info("Retrived All Cards successfully.");
         return new ResponseEntity<String>(cards, HttpStatus.OK);
 
     }

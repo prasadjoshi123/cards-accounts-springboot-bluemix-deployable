@@ -9,6 +9,8 @@ import io.swagger.annotations.*;
 
 import io.swagger.model.CardRepository;
 import org.ektorp.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
@@ -31,28 +33,31 @@ import static javax.servlet.SessionTrackingMode.URL;
 @RestController
 @RequestMapping("/fetch-card-details")
 public class FetchCardDetailsApiController implements FetchCardDetailsApi{
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private CardRepository repository;
     @Autowired
     CloudantBinding cloudantBinding;
 
     String id = null;
-   @RequestMapping(value = "/{cardNumber}", method = RequestMethod.GET, produces = "application/json")
-   public ResponseEntity<?> fetchCardsDetailsById(@PathVariable String cardNumber) {
-       CardDetails cardDetails=new CardDetails();
-       try {
-           String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
-           RestTemplate restTemplate = new RestTemplate();
-           String accountDetailsString = restTemplate.getForObject(URL, String.class);
-           id=getDocId(accountDetailsString);
-           cardDetails = repository.get(id);
-       }catch (IOException ex) {
-           return new ResponseEntity<ApplicationError>(
-                   new ApplicationError(HttpStatus.NOT_FOUND.value(), "Card Number not found"),
-                   HttpStatus.NOT_FOUND);
-       }
-       return new ResponseEntity<CardDetails>(cardDetails, HttpStatus.OK);
-   }
+    @RequestMapping(value = "/{cardNumber}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<?> fetchCardsDetailsById(@PathVariable String cardNumber) {
+        logger.info("Retriving Card Details for "+cardNumber+"...");
+        CardDetails cardDetails=new CardDetails();
+        try {
+            String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
+            RestTemplate restTemplate = new RestTemplate();
+            String accountDetailsString = restTemplate.getForObject(URL, String.class);
+            id=getDocId(accountDetailsString);
+            cardDetails = repository.get(id);
+        }catch (IOException ex) {
+            return new ResponseEntity<ApplicationError>(
+                    new ApplicationError(HttpStatus.NOT_FOUND.value(), "Card Number not found"),
+                    HttpStatus.NOT_FOUND);
+        }
+        logger.info("Retrived Card Details successfully for Card Number "+cardNumber+".");
+        return new ResponseEntity<CardDetails>(cardDetails, HttpStatus.OK);
+    }
 
     private String getDocId(String str) throws IOException {
         String id = null;

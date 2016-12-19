@@ -12,6 +12,8 @@ import io.swagger.utility.Utility;
 import org.ektorp.DocumentNotFoundException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
@@ -29,14 +31,20 @@ import java.util.List;
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringCodegen", date = "2016-12-02T10:00:02.459+05:30")
 
-@SpringBootApplication @RestController @RequestMapping("/update-card") public class UpdateCardApiController
+@SpringBootApplication
+@RestController
+@RequestMapping("/update-card")
+public class UpdateCardApiController
 		implements UpdateCardApi {
+	final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired private CardRepository repository;
 	@Autowired CloudantBinding cloudantBinding;
 	@Autowired RestTemplate restTemplate;
 
-	@RequestMapping(method = RequestMethod.PUT, value = "{cardNumber}", consumes = "application/json") public ResponseEntity<?> updateCardDetails(
+	@RequestMapping(method = RequestMethod.PUT, value = "{cardNumber}", consumes = "application/json")
+	public ResponseEntity<?> updateCardDetails(
 			@RequestBody CardDetails cardD, @PathVariable String cardNumber) {
+		logger.info("Updating Card Details for "+cardNumber+"...");
 		CardDetails cardDetails = null;
 		String stringToParse = null;
 		try {
@@ -48,15 +56,15 @@ import java.util.List;
 			String id = getDocId(stringToParse);
 			cardDetails = repository.get(id);
 		} catch (ApiException ae) {
-			return new ResponseEntity<ApplicationError>(new ApplicationError(ae.getCode(), ae.getMessage()),
+			return new ResponseEntity<ApplicationError>(new ApplicationError( 404,ae.getMessage()),
 					HttpStatus.NOT_FOUND);
 		} catch (DocumentNotFoundException ex) {
 			return new ResponseEntity<ApplicationError>(
-					new ApplicationError(HttpStatus.NOT_FOUND.value(), "Document to be updated not found"),
+					new ApplicationError(HttpStatus.NOT_FOUND.value(), "Card Number to be updated not found."),
 					HttpStatus.NOT_FOUND);
 		} catch (IOException ex) {
 			return new ResponseEntity<ApplicationError>(
-					new ApplicationError(HttpStatus.NOT_FOUND.value(), "document to be updated not found"),
+					new ApplicationError(HttpStatus.NOT_FOUND.value(), "Card Number to be updated not found."),
 					HttpStatus.NOT_FOUND);
 		}
 		cardDetails.setCardNumber(cardD.getCardNumber());
@@ -67,6 +75,7 @@ import java.util.List;
 		cardDetails.setExpiryDate(cardD.getExpiryDate());
 		cardDetails.setStartDate(cardD.getStartDate());
 		repository.update(cardDetails);
+		logger.info("Updated Card details successfully for "+ cardNumber+".");
 		return new ResponseEntity<CardDetails>(cardDetails, HttpStatus.OK);
 	}
 

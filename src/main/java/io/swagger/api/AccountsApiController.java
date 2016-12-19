@@ -6,6 +6,8 @@ import io.swagger.model.*;
 import io.swagger.utility.Utility;
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.UpdateConflictException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import io.swagger.configuration.CloudantBinding;
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringCodegen", date = "2016-11-01T18:09:28.587+05:30")
-
-@RestController public class AccountsApiController implements AccountsApi {
+@RestController
+public class AccountsApiController implements AccountsApi {
+	final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private AccountRepository repository;
@@ -33,6 +36,7 @@ import io.swagger.configuration.CloudantBinding;
 
 	@RequestMapping(value = "/accounts", method = RequestMethod.POST) public ResponseEntity<?> createAccount(
 			@ApiParam(value = "The account to be created.") @RequestBody AccountDetails accountDetails) {
+		logger.info("Creating New Account...");
 		try {
 			/**
 			 * Making Username,mobile number & address mandatory
@@ -47,6 +51,7 @@ import io.swagger.configuration.CloudantBinding;
 			return new ResponseEntity<ApplicationError>(new ApplicationError(HttpStatus.BAD_REQUEST.value(),
 					"update conflicted, add was aborted. Please check your payload"), HttpStatus.BAD_REQUEST);
 		}
+		logger.info("Account Created Successfully.");
 		return new ResponseEntity<AccountDetails>(accountDetails, HttpStatus.OK);
 
 	}
@@ -54,6 +59,7 @@ import io.swagger.configuration.CloudantBinding;
 
 	@RequestMapping(value = "/accounts/{accountNumber}", method = RequestMethod.GET) public ResponseEntity<?> getAccountDetails(
 			@PathVariable String accountNumber) {
+		logger.info("Retriving Account  Details for "+accountNumber+ "...");
 		AccountDetails accountDetails = new AccountDetails();
 		String id = null;
 		try {
@@ -71,23 +77,22 @@ import io.swagger.configuration.CloudantBinding;
 					HttpStatus.NOT_FOUND);
 		}catch (IOException ex) {
 			return new ResponseEntity<ApplicationError>(
-					new ApplicationError(HttpStatus.NOT_FOUND.value(), "document to be updated not found"),
+					new ApplicationError(HttpStatus.NOT_FOUND.value(), "Account Number does not exist."),
 					HttpStatus.NOT_FOUND);
 		}
+		logger.info("Retrived account details successfully for "+accountNumber);
 		return new ResponseEntity<AccountDetails>(accountDetails, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/accounts", method = RequestMethod.GET) public ResponseEntity<?> getAllAccounts() {
-
+		logger.info("Retriving all account details...");
 		String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/AccountDetails/_view/accounts_view?include_docs=true";
 		RestTemplate restTemplate = new RestTemplate();
 		String accounts = restTemplate.getForObject(URL, String.class);
-
-		//List<AccountDetails> allAccounts = new ArrayList<AccountDetails>();
-		/*repository.getAll();*/
 		if (accounts == null || accounts.isEmpty())
 			return new ResponseEntity<ApplicationError>(
-					new ApplicationError(HttpStatus.NOT_FOUND.value(), "no documents found"), HttpStatus.NOT_FOUND);
+					new ApplicationError(HttpStatus.NOT_FOUND.value(), "No documents found."), HttpStatus.NOT_FOUND);
+		logger.info("Retriving all account details...");
 		return new ResponseEntity<String>(accounts, HttpStatus.OK);
 
 	}

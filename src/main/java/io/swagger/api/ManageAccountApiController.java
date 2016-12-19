@@ -10,6 +10,8 @@ import io.swagger.model.AccountDetails;
 import io.swagger.model.AccountRepository;
 import io.swagger.utility.Utility;
 import org.ektorp.DocumentNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,11 +25,10 @@ import java.util.List;
 
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringCodegen", date = "2016-11-01T18:09:28.587+05:30")
-
 @Controller
 @RequestMapping("/manage-account")
-
 public class ManageAccountApiController implements ManageAccountApi {
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private AccountRepository acountRepository;
     @Autowired
@@ -37,6 +38,8 @@ public class ManageAccountApiController implements ManageAccountApi {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "{accountNumber}")
     public ResponseEntity<?> deleteAccountDetails(@PathVariable String accountNumber) {
+        logger.info("Deleting Account with "+accountNumber+"...");
+
         AccountDetails accountDetails =null;
         String id=null;
         try {
@@ -50,14 +53,15 @@ public class ManageAccountApiController implements ManageAccountApi {
                     HttpStatus.NOT_FOUND);
         } catch (DocumentNotFoundException ex) {
             return new ResponseEntity<ApplicationError>(
-                    new ApplicationError(HttpStatus.NOT_FOUND.value(), "ID to be deleted not found"),
+                    new ApplicationError(HttpStatus.NOT_FOUND.value(), "Account Number to be deleted not found."),
                     HttpStatus.NOT_FOUND);
         }catch (IOException ex) {
             return new ResponseEntity<ApplicationError>(
-                    new ApplicationError(HttpStatus.NOT_FOUND.value(), "document to be updated not found"),
+                    new ApplicationError(HttpStatus.NOT_FOUND.value(), "Account Number to be deleted not found."),
                     HttpStatus.NOT_FOUND);
         }
         acountRepository.remove(acountRepository.get(id));
+        logger.info("Deleted account with "+accountNumber+" successfully.");
         return new ResponseEntity<HttpStatus>(HttpStatus.OK);
 
     }
