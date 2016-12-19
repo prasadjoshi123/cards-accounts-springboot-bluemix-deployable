@@ -10,6 +10,8 @@ import io.swagger.model.Cards;
 import io.swagger.annotations.*;
 
 import org.ektorp.DocumentNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
@@ -29,7 +31,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/fetch-cards")
 public class FetchCardsApiController implements FetchCardsApi {
-
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private CardRepository repository;
     @Autowired
@@ -38,6 +40,7 @@ public class FetchCardsApiController implements FetchCardsApi {
     String id = null;
     @RequestMapping(value = "{custId}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> fetchCardsForCustomer(@PathVariable Integer custId) {
+        logger.info("Retriving Card Details for "+custId+"...");
         CardDetails cardDetails=new CardDetails();
         try {
             String URL = "http://"  + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_search/search_card_details?q=custId:" + custId;
@@ -50,7 +53,7 @@ public class FetchCardsApiController implements FetchCardsApi {
                     new ApplicationError(HttpStatus.NOT_FOUND.value(), "Customer Id not found"),
                     HttpStatus.NOT_FOUND);
         }
-
+        logger.info("Retrived Card Details successfully for Customer Id "+custId+".");
         return new ResponseEntity<CardDetails>(cardDetails, HttpStatus.OK);
     }
 
