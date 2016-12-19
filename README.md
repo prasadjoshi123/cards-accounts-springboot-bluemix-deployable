@@ -45,7 +45,7 @@ https://hub.docker.com/r/ibmcom/cloudant-developer/<BR>
                 }
             }
 <BR>
-11. Create views on on "cards_accounts_db" database
+11. Create views on "cards_accounts_db" database
 
     i)  _design  : CardDetails<BR>
          Index name : cards_view<BR>
