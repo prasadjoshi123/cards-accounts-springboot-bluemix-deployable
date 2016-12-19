@@ -87,7 +87,7 @@ public class AccountsApiController implements AccountsApi {
 	@RequestMapping(value = "/accounts", method = RequestMethod.GET) public ResponseEntity<?> getAllAccounts() {
 		logger.info("Retriving all account details...");
 		String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/AccountDetails/_view/accounts_view?include_docs=true";
-		RestTemplate restTemplate = new RestTemplate();
+
 		String accounts = restTemplate.getForObject(URL, String.class);
 		if (accounts == null || accounts.isEmpty())
 			return new ResponseEntity<ApplicationError>(
