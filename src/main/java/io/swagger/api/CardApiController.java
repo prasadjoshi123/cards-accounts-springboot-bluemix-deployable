@@ -40,6 +40,9 @@ public class CardApiController implements CardApi {
     @Autowired
     CloudantBinding cloudantBinding;
 
+    @Autowired
+    RestTemplate restTemplate;
+
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<?> createCard(@ApiParam(value = "The card to be created."  ) @RequestBody CardDetails cardDetails) {
         logger.info("Creating New Card...");
@@ -63,7 +66,7 @@ public class CardApiController implements CardApi {
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> getAllCards() {
         logger.info("Retriving All Cards...");
-        RestTemplate restTemplate = new RestTemplate();
+
         String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_view/cards_view?include_docs=true";
         String cards = restTemplate.getForObject(URL, String.class);
 
