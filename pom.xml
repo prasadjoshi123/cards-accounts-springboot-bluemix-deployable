@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.swagger</groupId>
     <artifactId>swagger-spring</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <name>swagger-spring</name>
     <version>1.0.0</version>
     <properties>
@@ -10,7 +10,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <springfox-version>2.5.0</springfox-version>
-        <!-- <start-class>io.swagger.api.CardApiController</start-class>  -->
+        <start-class>io.swagger.Swagger2SpringBoot</start-class>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>

@@ -8,7 +8,7 @@ https://hub.docker.com/r/ibmcom/cloudant-developer/<BR>
 5. Run"mvn clean install -U"command on Terminal inside Intellij<BR>
 6. Copy spring-cloud.properties from project resources to c:\dev on local<BR>
 7. Make sure cloudant is running in your docker container on local<BR>
-8. In intelliJ Terminal run command "java -jar target/swagger-spring-1.0.0.jar"<BR>
+8. In intelliJ Terminal run command "java -jar target/swagger-spring-1.0.0.war"<BR>
 9. Open "http://localhost:8080/dashboard.html" and check if "cards_accounts_db" is created with 0 records<BR>
 10. Create below search indices on "cards_accounts_db" database <BR>
 <BR>
