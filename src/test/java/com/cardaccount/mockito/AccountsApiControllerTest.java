@@ -85,31 +85,14 @@ import static org.mockito.Mockito.when;
 
 		ResponseEntity response = accountsApiController.getAllAccounts();
 
-		int acccountsListSize = 0;
+		String accountDetailsResponse=null;
 		if (response.getBody() != null) {
-			List<AccountDetails> accountDetailsResponse = (List<AccountDetails>)response.getBody();
-			if (accountDetailsResponse != null && !accountDetailsResponse.isEmpty()) {
-				acccountsListSize = accountDetailsResponse.size();
-			}
+			 accountDetailsResponse = (String)response.getBody();
+
 		}
 
 		Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-		Assert.assertEquals(allAccounts.size(), acccountsListSize);
-
-	}
-
-	@Test public void testGetAllAccountsForEmptyResults() {
-		when(repository.getAll()).thenReturn(null);
-
-		ResponseEntity response = accountsApiController.getAllAccounts();
-
-		int acccountsListSize = 100;
-		if (response.getBody() instanceof ApplicationError) {
-			acccountsListSize = 0;
-		}
-
-		Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-		Assert.assertEquals(0, acccountsListSize);
+		Assert.assertEquals(validAccountId, accountDetailsResponse);
 
 	}
 
