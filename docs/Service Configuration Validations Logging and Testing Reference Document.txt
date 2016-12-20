@@ -1,0 +1,190 @@
+//http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-create-a-deployable-war-file
+
+Create new project in IntelliJ by checking out code from git repository with address -https://github.com/vajadhav/account-springboot
+Configure project as mvn
+Resolve libraries dependency
+Run - mvn clean install -U -->command on Terminal inside Intellij
+Copy spring-cloud.properties from project resources to c:\dev on local
+Make sure cloudant is running in your docker container on local 
+In intelliJ Terminal run command "java -jar target/swagger-spring-1.0.0.jar"
+In intelliJ Terminal run command "java -jar target/swagger-spring-1.0.0.war"
+
+Open http://localhost:8080/dashboard.html and check if cards_accounts_db is created with 0 records
+
+Make sure it has below index created 
+
+Index name- search_card_details
+Design Document name- CardDetails
+Search Index Function-
+function(doc){
+  index("default", doc._id);
+
+    if(doc.custId ){
+    index("custId", doc.custId , {"facet": true, "store": true});
+  }
+
+  if(doc.cardNumber){
+    index("cardNumber", doc.cardNumber, {"facet": true, "store": true});
+  }
+  if (doc['class']){
+    index("class", doc['class'], {"facet": true, "store": true});
+  }
+} 
+Please test serach index in browser with below URLs -
+http://localhost:8080/cards_accounts_db/_design/CardDetails/_search/search_card_details?q=cardNumber%3A2222
+http://localhost:8080/cards_accounts_db/_design/CardDetails/_search/search_card_details?q=custId%3A33401
+Index name: search_account_details<BR>
+        Save to Design Document: AccountDetails<BR>
+        Search index function:<BR>
+
+        function(doc)
+            {
+              index("default", doc._id);
+                if(doc.accountNumber){
+                index("accountNumber", doc.accountNumber, {"facet": true, "store": true});
+                }
+                if (doc['class']){
+                index("class", doc['class'], {"facet": true, "store": true});
+                }
+            }
+
+http://localhost:8080/cards_accounts_db/_design/AccountDetails/_search/search_account_details?q=accountNumber%3A1234
+
+Create views on "cards_accounts_db" database
+
+    i)  _design  : CardDetails<BR>
+         Index name : cards_view<BR>
+
+         function (doc){
+                     if(doc.dbRecordType=="cards"){
+                     emit(doc._id,1)
+                     }
+         }
+
+    ii) _design  : AccountDetails<BR>
+        Index name : accounts_view<BR>
+
+        function (doc){
+                   if(doc.dbRecordType=="accounts"){
+                   emit(doc._id,1)
+                   }
+        }
+
+
+http://localhost:7070/card-accounts/card (Create Card)
+http://localhost:7070/card-accounts/card (Retrieve all Cards)
+http://localhost:7070/card-accounts/fetch-card-details/23445 (Fetch by Card Number)
+http://localhost:7070/card-accounts/fetch-cards/10010 (Fetch by Customer ID)
+http://localhost:7070/card-accounts/update-card/23445 (Update Card)
+http://localhost:7070/card-accounts/manage-card/23445 (Delete Cards)
+
+http://localhost:7070/card-accounts/accounts (Create Account)
+http://localhost:7070/card-accounts/accounts (Retrive all Accounts)
+http://localhost:7070/card-accounts/accounts/5456707 (Fetch by account Number)
+http://localhost:7070/card-accounts/update-account/5456707 (Update Account)
+http://localhost:7070/card-accounts/manage-account/5456707 (Delete Accounts)
+
+
+{
+  "userName": "Garima Gupta",
+  "customerId": 890,
+  "accountType": "Saving",
+  "accountStatus": "Active",
+  "accountBalance": 123.34,
+  "address": "Gurgaon",
+  "accountNumber": 1234,
+  "mobileNumber": 9899876285
+}
+
+{
+  "cardNumber": 1234,
+  "cardType": "Atm",
+  "custId": 10010,
+  "cardStatus": "Active",
+  "startDate": "12/12/2016",
+  "expiryDate": "12/12/2021",
+  "cardApplyMode": "mobile"
+}
+
+#Input Field Validations
+
+CustId- 10 digits
+CardNumber- 16 digits
+Mobile number - 10 digits
+start date and expiry date (expiry date should be greater than start date )
+
+Account Number - 15 digits
+CustId - 16 digits
+Accout balance - Default to 1000
+Account status - Dormant , Active , In-Active 
+Mobile number - 10 digits
+
+#Input Field Mandatory validations
+
+#POST/Update-create
+CardType
+Cardnumber
+CustID
+
+#POST/Update- account
+account number
+username
+address
+
+#POST/Update-Delete -get by card# and custId
+Cardnumber
+CustID
+POST/Update-Delete -get by acc# 
+account number
+
+#Logging at Controller Level
+Creating New Account...
+Account Created Successfully.
+
+Retriving all account details...
+Retrived all account details successfully
+
+Retriving Account  Details for {accountnumber}.
+Retrived account details successfully for {accountnumber}
+
+Updating Account Details for {accountnumber}...
+Updated Account details successfully for {accountnumber}
+
+Deleting Account with {accountnumber}....
+Deleted account with {accountnumber}successfully.
+
+Adding New Card...
+Card added Successfully.
+
+Retriving All Cards...
+Retrived All Cards successfully
+
+Retriving Card Details for {cardnumber}...
+Retrived Card Details successfully for {cardnumber}
+
+Retriving Card Details for {CustomerID}...
+Retrived Card Details successfully for {CustomerID}.
+
+Updating Card Details for {cardnumber}...
+Updated Card details successfully for {cardnumber}
+
+Deleting Card with {cardnumber}....
+Deleted Card  with {cardnumber}successfully.
+
+#Bluemix Cloudant, add Cloudant DB as a service
+before launching open -Service Credentials Tab, if credentials available , click on New Credentials , press button Add
+Credentials for you would be created copy and store it on notepad
+
+{
+  "username": "55afd58e-46b5-4f3f-8c23-37f7d3060289-bluemix",
+  "password": "6faedeab671d9a172e482620501643264d5b7c6e4e08fd3e3744b6da22b84c12",
+  "host": "55afd58e-46b5-4f3f-8c23-37f7d3060289-bluemix.cloudant.com",
+  "port": 443,
+  "url": "https://55afd58e-46b5-4f3f-8c23-37f7d3060289-bluemix:6faedeab671d9a172e482620501643264d5b7c6e4e08fd3e3744b6da22b84c12@55afd58e-46b5-4f3f-8c23-37f7d3060289-bluemix.cloudant.com"
+}
+
+
+
+
+
+
