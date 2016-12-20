@@ -1,8 +1,8 @@
 Create new project in IntelliJ by checking out code from git repository with address -https://github.com/vajadhav/account-springboot
 Configure project as mvn
 Resolve libraries dependency
-Run - mvn clean install -U -->command on Terminal inside Intellij
-Copy spring-cloud.properties from project resources to c:\dev on local
+Run "mvn clean install -U" command on Terminal inside Intellij
+Copy "spring-cloud.properties" from project resources to c:\dev on local
 Make sure cloudant is running in your docker container on local 
 In intelliJ Terminal run command "java -jar target/swagger-spring-1.0.0.jar"
 In intelliJ Terminal run command "java -jar target/swagger-spring-1.0.0.war"
