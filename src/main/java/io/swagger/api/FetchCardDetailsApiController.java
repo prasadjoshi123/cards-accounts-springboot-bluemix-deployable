@@ -45,7 +45,9 @@ public class FetchCardDetailsApiController implements FetchCardDetailsApi{
         logger.info("Retriving Card Details for "+cardNumber+"...");
         CardDetails cardDetails=new CardDetails();
         try {
-            String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
+//            String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
+            String URL = "http://" + cloudantBinding.getHost() + "/cards_accounts_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
+
             RestTemplate restTemplate = new RestTemplate();
             String accountDetailsString = restTemplate.getForObject(URL, String.class);
             id=getDocId(accountDetailsString);

@@ -67,7 +67,9 @@ public class CardApiController implements CardApi {
     public ResponseEntity<?> getAllCards() {
         logger.info("Retriving All Cards...");
 
-        String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_view/cards_view?include_docs=true";
+        //String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_view/cards_view?include_docs=true";
+        String URL ="http://" + cloudantBinding.getHost() + "/cards_accounts_db/_design/CardDetails/_view/cards_view?include_docs=true";
+
         String cards = restTemplate.getForObject(URL, String.class);
 
         if (cards == null || cards.isEmpty())

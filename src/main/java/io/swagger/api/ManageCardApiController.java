@@ -46,7 +46,8 @@ public class ManageCardApiController
 		String stringToParse = null;
 		try {
 			validateCardDetails(cardNumber);
-			String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
+			//String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
+			String URL = "http://" + cloudantBinding.getHost() + "/cards_accounts_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
 
 			stringToParse = restTemplate.getForObject(URL, String.class);
 			String id = getDocId(stringToParse);
