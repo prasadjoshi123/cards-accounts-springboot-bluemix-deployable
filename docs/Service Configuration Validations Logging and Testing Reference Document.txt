@@ -1,5 +1,3 @@
-//http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-create-a-deployable-war-file
-
 Create new project in IntelliJ by checking out code from git repository with address -https://github.com/vajadhav/account-springboot
 Configure project as mvn
 Resolve libraries dependency
