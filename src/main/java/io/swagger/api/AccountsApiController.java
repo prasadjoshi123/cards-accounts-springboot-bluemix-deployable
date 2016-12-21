@@ -9,6 +9,7 @@ import org.ektorp.UpdateConflictException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,13 @@ import io.swagger.configuration.CloudantBinding;
 @RestController
 public class AccountsApiController implements AccountsApi {
 	final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@Value("${accounts.retrieve.all.url}")
+	private String getAllAccountURL;
+
+	@Value("${accounts.search.url}")
+	private String searchAccountURL;
+
 
 	@Autowired
 	private AccountRepository repository;
@@ -64,7 +72,7 @@ public class AccountsApiController implements AccountsApi {
 		String id = null;
 		try {
 			validateGetAccountDetails(accountNumber);
-			String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
+			String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + searchAccountURL +accountNumber;
 			String accountDetailsString = restTemplate.getForObject(URL, String.class);
 			id=getDocId(accountDetailsString);
 			accountDetails = repository.get(id);
@@ -86,7 +94,7 @@ public class AccountsApiController implements AccountsApi {
 
 	@RequestMapping(value = "/accounts", method = RequestMethod.GET) public ResponseEntity<?> getAllAccounts() {
 		logger.info("Retriving all account details...");
-		String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/AccountDetails/_view/accounts_view?include_docs=true";
+		String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + getAllAccountURL ;
 
 		String accounts = restTemplate.getForObject(URL, String.class);
 		if (accounts == null || accounts.isEmpty())

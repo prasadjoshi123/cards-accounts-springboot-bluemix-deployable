@@ -12,6 +12,7 @@ import org.ektorp.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,8 @@ public class FetchCardDetailsApiController implements FetchCardDetailsApi{
     private CardRepository repository;
     @Autowired
     CloudantBinding cloudantBinding;
+    @Value("${cards.search.by.cardnumber.url}")
+    private String searchCardURL;
 
     String id = null;
     @RequestMapping(value = "/{cardNumber}", method = RequestMethod.GET, produces = "application/json")
@@ -45,7 +48,7 @@ public class FetchCardDetailsApiController implements FetchCardDetailsApi{
         logger.info("Retriving Card Details for "+cardNumber+"...");
         CardDetails cardDetails=new CardDetails();
         try {
-            String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
+            String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + searchCardURL + cardNumber;
 
             RestTemplate restTemplate = new RestTemplate();
             String accountDetailsString = restTemplate.getForObject(URL, String.class);

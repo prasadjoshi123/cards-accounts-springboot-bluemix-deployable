@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,9 @@ public class CardApiController implements CardApi {
     @Autowired
     RestTemplate restTemplate;
 
+    @Value("${cards.retrieve.all.url}")
+    private String getAllCardURL;
+
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<?> createCard(@ApiParam(value = "The card to be created."  ) @RequestBody CardDetails cardDetails) {
         logger.info("Creating New Card...");
@@ -67,7 +71,7 @@ public class CardApiController implements CardApi {
     public ResponseEntity<?> getAllCards() {
         logger.info("Retriving All Cards...");
 
-        String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_view/cards_view?include_docs=true";
+        String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + getAllCardURL;
         String cards = restTemplate.getForObject(URL, String.class);
 
         if (cards == null || cards.isEmpty())

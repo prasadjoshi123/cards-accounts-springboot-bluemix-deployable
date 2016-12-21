@@ -12,6 +12,7 @@ import io.swagger.utility.Utility;
 import org.ektorp.DocumentNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,10 @@ public class ManageAccountApiController implements ManageAccountApi {
     @Autowired
     RestTemplate restTemplate;
 
+    @Value("${accounts.search.url}")
+    private String searchAccountURL;
+
+
     @RequestMapping(method = RequestMethod.DELETE, value = "{accountNumber}")
     public ResponseEntity<?> deleteAccountDetails(@PathVariable String accountNumber) {
         logger.info("Deleting Account with "+accountNumber+"...");
@@ -44,7 +49,7 @@ public class ManageAccountApiController implements ManageAccountApi {
         String id=null;
         try {
             validateAccountDetails(accountNumber);
-            String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() +"/cards_accounts_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"+accountNumber;
+            String URL ="http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + searchAccountURL +accountNumber;
 
             String accountDetailsString = restTemplate.getForObject(URL, String.class);
             id=getDocId(accountDetailsString);

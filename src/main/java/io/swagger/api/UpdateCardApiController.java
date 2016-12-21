@@ -15,6 +15,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,8 @@ public class UpdateCardApiController
 	@Autowired private CardRepository repository;
 	@Autowired CloudantBinding cloudantBinding;
 	@Autowired RestTemplate restTemplate;
+	@Value("${cards.search.by.cardnumber.url}")
+	private String searchCardURL;
 
 	@RequestMapping(method = RequestMethod.PUT, value = "{cardNumber}", consumes = "application/json")
 	public ResponseEntity<?> updateCardDetails(
@@ -50,9 +53,7 @@ public class UpdateCardApiController
 		try {
 			validateCardDetails(cardNumber);
 
-			//String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + "/cards_accounts_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
-			String URL = "http://" + cloudantBinding.getHost() + "/cards_accounts_db/_design/CardDetails/_search/search_card_details?q=cardNumber:" + cardNumber;
-
+			String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + searchCardURL + cardNumber;
 			stringToParse = restTemplate.getForObject(URL, String.class);
 			String id = getDocId(stringToParse);
 			cardDetails = repository.get(id);

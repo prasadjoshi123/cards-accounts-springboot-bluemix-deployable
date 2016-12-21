@@ -13,6 +13,7 @@ import org.ektorp.DocumentNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,8 @@ public class UpdateAccountApiController implements UpdateAccountApi {
 	@Autowired private AccountRepository repository;
 	@Autowired CloudantBinding cloudantBinding;
 	@Autowired RestTemplate restTemplate;
+	@Value("${accounts.search.url}")
+	private String searchAccountURL;
 
 	@RequestMapping(method = RequestMethod.PUT, value = "{accountNumber}", consumes = "application/json") public ResponseEntity<?> updateAccountDetails(
 			@RequestBody AccountDetails accountDetails, @PathVariable String accountNumber) {
@@ -40,9 +43,7 @@ public class UpdateAccountApiController implements UpdateAccountApi {
 		AccountDetails accountDetails1 = null;
 		String id = null;
 		try {
-			String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort()
-					+ "/cards_accounts_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"
-					+ accountNumber;
+			String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort() + searchAccountURL + accountNumber;
 			validateAccountDetails(accountNumber);
 			String accountDetailsString = restTemplate.getForObject(URL, String.class);
 			id = getDocId(accountDetailsString);

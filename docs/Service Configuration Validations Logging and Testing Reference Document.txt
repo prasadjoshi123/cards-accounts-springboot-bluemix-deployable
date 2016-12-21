@@ -4,7 +4,6 @@ Resolve libraries dependency
 Run "mvn clean install -U" command on Terminal inside Intellij
 Copy "spring-cloud.properties" from project resources to c:\dev on local
 Make sure cloudant is running in your docker container on local 
-In intelliJ Terminal run command "java -jar target/swagger-spring-1.0.0.jar"
 In intelliJ Terminal run command "java -jar target/swagger-spring-1.0.0.war"
 
 Open http://localhost:8080/dashboard.html and check if cards_accounts_db is created with 0 records
