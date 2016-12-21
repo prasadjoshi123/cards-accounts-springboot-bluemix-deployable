@@ -40,10 +40,7 @@ public class UpdateAccountApiController implements UpdateAccountApi {
 		AccountDetails accountDetails1 = null;
 		String id = null;
 		try {
-			//String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort()
-			//		+ "/cards_accounts_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"
-			//		+ accountNumber;
-			String URL = "http://" + cloudantBinding.getHost()
+			String URL = "http://" + cloudantBinding.getHost() + ":" + cloudantBinding.getPort()
 					+ "/cards_accounts_db/_design/AccountDetails/_search/search_account_details?q=accountNumber:"
 					+ accountNumber;
 			validateAccountDetails(accountNumber);
